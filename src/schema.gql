@@ -1,0 +1,45 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserEntity {
+  id: String!
+  name: String!
+  email: String!
+  password: String!
+}
+
+type UserId {
+  id: String!
+}
+
+type Token {
+  token: String!
+}
+
+type Query {
+  getUser(input: UserEmail!): UserEntity!
+  getAllUsers: [UserEntity!]!
+}
+
+input UserEmail {
+  email: String!
+}
+
+type Mutation {
+  editUserInfo: UserEntity!
+  register(input: RegisterDto!): UserId!
+  login(input: LoginDto!): Token!
+}
+
+input RegisterDto {
+  email: String!
+  name: String!
+  password: String!
+  passwordRepeat: String!
+}
+
+input LoginDto {
+  email: String!
+  password: String!
+}
