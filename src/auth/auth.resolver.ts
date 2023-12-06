@@ -2,14 +2,15 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register-dto';
 import { UserId } from './endity/userId-endity';
-import { BadRequestException, UnauthorizedException, UseGuards } from "@nestjs/common";
-import { Token } from "./endity/token-endity";
+import { BadRequestException, UnauthorizedException } from "@nestjs/common";
+import { Token } from '@prisma/client';
 import { LoginDto } from "./dto/login-dto";
 import { Response } from "express";
 import { Tokens } from "@src/auth/iterfaces";
 import { UserAgent } from "@app/common/decorators/user-agent-decorator";
 import { Message } from '@src/common/global-endity/message-endity';
-import { Cookie } from '@app/common/decorators/cookie-decorator';
+import { RefreshToken } from '@app/common/decorators/refreshtoken-decorator';
+import { AccessToken } from './endity/token-endity';
 
 @Resolver()
 export class AuthResolver {
@@ -32,7 +33,7 @@ export class AuthResolver {
         }
     }
 
-    @Mutation(() => Token)
+    @Mutation(() => AccessToken)
     async login(@Args('input') dto: LoginDto, @Context('res') res: Response, @UserAgent() agent: string) {
         try {
             const tokens = await this.authService.login(dto, agent);
@@ -47,7 +48,7 @@ export class AuthResolver {
         }
     }
     
-    private async sendRefreshTokenToCookies(tokens: Tokens, res: Response) {
+    private async sendRefreshTokenToCookies(tokens: Tokens, res: Response): Promise<AccessToken> {
         if (!tokens) {
             throw new UnauthorizedException()
         }
@@ -63,21 +64,41 @@ export class AuthResolver {
     }
 
     @Mutation(() => Message)
-    async logout(@Cookie() refreshToken, @Context('res') res: Response) {
+    async logout(@RefreshToken() refreshToken: Token | null, @Context('res') res: Response) {
+        try {
 
-        const token = refreshToken["REFRESH_TOKEN"] ? refreshToken["REFRESH_TOKEN"].token : null
+            const token = refreshToken?.token
 
-        if (!token) {
+            if (!token) {
+                return { success: true, message: 'Logout!' };
+            }
+    
+            await this.authService.deleteRefreshToken(token);
+            res.cookie('REFRESH_TOKEN', '', { httpOnly: true, secure: true, expires: new Date() });
+    
             return { success: true, message: 'Logout successful!' };
+        } catch (error) {
+            throw error;
         }
-
-        await this.authService.deleteRefreshToken(token);
-        res.cookie('REFRESH_TOKEN', '', { httpOnly: true, secure: true, expires: new Date() });
-
-        return { success: true, message: 'Logout successful!' };
     }
     
-    refreshTokens() { }
+    @Query(() => AccessToken)
+    async updateTokens(@RefreshToken() refreshToken: Token, @Context('res') res: Response, @UserAgent() agent: string) {
+        try {
+            if (!refreshToken) {
+                throw new UnauthorizedException();
+            }
+
+            const tokens = await this.authService.refreshTokens(refreshToken, agent);
+
+            if (!tokens) {
+                throw new UnauthorizedException();
+            }
+            return this.sendRefreshTokenToCookies(tokens, res);
+        } catch (error) {
+            throw error;
+        }
+    }
     
     googleAuth() { }
     

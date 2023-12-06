@@ -9,6 +9,7 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@src/common/prisma/prisma";
 import { add } from 'date-fns';
 import { v4 } from 'uuid';
+import { Tokens } from "./iterfaces";
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
         return userId;
     }
 
-    async login(dto: LoginDto, agent: string) {
+    async login(dto: LoginDto, agent: string): Promise<Tokens> {
         const user = await this.userService.getUser(dto.email)
 
         if (!user || !compareSync(dto.password, user.password)) {
@@ -34,7 +35,7 @@ export class AuthService {
         return this.generateTokens(user, agent)
     }
 
-    private async generateTokens(user: User, agent: string) {
+    private async generateTokens(user: User, agent: string): Promise<Tokens> {
         const accessToken =
             'Bearer ' +
             this.jwtService.sign({
@@ -80,9 +81,18 @@ export class AuthService {
         return newToken
     }
     
-    async refreshTokens() {}
+    async refreshTokens(refreshToken: Token, agent: string): Promise<Tokens> {
+        const token = await this.prismaService.token.delete({ where: { token: refreshToken.token } });
 
-    deleteRefreshToken(token: string) {
+        if (!token || new Date(token.exp) < new Date()) {
+            throw new UnauthorizedException();
+        }
+        const user = await this.userService.getUser(token.userId);
+
+        return this.generateTokens(user, agent);
+    }
+
+    deleteRefreshToken(token: string): Promise<Token> {
         return this.prismaService.token.delete({ where: { token } });
     }
 

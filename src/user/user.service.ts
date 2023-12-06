@@ -31,9 +31,11 @@ export class UserService {
 
     async editUserInfo() {}
 
-    async getUser(email: string): Promise<User> {
+    async getUser(idOrEmail: string): Promise<User> {
         const user = await this.prisma.user.findFirst({
-            where: { email }
+            where: { 
+                OR: [{ id: idOrEmail }, { email: idOrEmail }],
+            }
         });
 
         return user
