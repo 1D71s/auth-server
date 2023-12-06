@@ -6,15 +6,24 @@ type UserEntity {
   id: String!
   name: String!
   email: String!
-  password: String!
+  description: String!
+  role: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  isBlocked: Boolean!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type UserId {
   id: String!
 }
 
 type Token {
-  token: String!
+  accessToken: String!
 }
 
 type Query {

@@ -1,9 +1,9 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { UserEntity } from './entity/user-entity';
 import { PrismaService } from 'src/common/prisma/prisma';
 import { RegisterDto } from '../auth/dto/register-dto';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { UserId } from 'src/auth/endity/userId-endity';
+import { User } from '@prisma/client';
 
 
 @Injectable()
@@ -31,13 +31,15 @@ export class UserService {
 
     async editUserInfo() {}
 
-    async getUser(email: string): Promise<UserEntity> {
-        return await this.prisma.user.findFirst({
+    async getUser(email: string): Promise<User> {
+        const user = await this.prisma.user.findFirst({
             where: { email }
         });
+
+        return user
     }
 
-    async getAllUsers(): Promise<UserEntity[]> {
+    async getAllUsers(): Promise<User[]> {
         const users = await this.prisma.user.findMany();
 
         if (users.length === 0) {

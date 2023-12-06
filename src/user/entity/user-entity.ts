@@ -11,6 +11,18 @@ export class UserEntity {
 	@Field()
 	email: string
 
-    @Field()
-	password: string
+	@Field()
+	description: string
+
+	@Field()
+	role: string
+
+	@Field()
+	createdAt: Date;
+	
+	@Field()
+	updatedAt: Date;
+	
+	@Field()
+	isBlocked: boolean
 }
