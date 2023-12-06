@@ -26,6 +26,11 @@ type Token {
   accessToken: String!
 }
 
+type Message {
+  success: Boolean!
+  message: String!
+}
+
 type Query {
   getUser(input: UserEmail!): UserEntity!
   getAllUsers: [UserEntity!]!
@@ -39,6 +44,7 @@ type Mutation {
   editUserInfo: UserEntity!
   register(input: RegisterDto!): UserId!
   login(input: LoginDto!): Token!
+  logout: Message!
 }
 
 input RegisterDto {

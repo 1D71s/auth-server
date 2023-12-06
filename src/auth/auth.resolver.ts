@@ -1,17 +1,19 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register-dto';
 import { UserId } from './endity/userId-endity';
-import { BadRequestException, Res, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { Token } from "./endity/token-endity";
 import { LoginDto } from "./dto/login-dto";
 import { Response } from "express";
 import { Tokens } from "@src/auth/iterfaces";
 import { UserAgent } from "@app/common/decorators/user-agent-decorator";
+import { Message } from '@src/common/global-endity/message-endity';
+import { Cookie } from '@app/common/decorators/cookie-decorator';
 
 @Resolver()
 export class AuthResolver {
-    
+
     constructor(private readonly authService: AuthService) { }
 
     @Mutation(() => UserId)
@@ -60,7 +62,20 @@ export class AuthResolver {
         return { accessToken: tokens.accessToken }
     }
 
-    logOut() {}
+    @Mutation(() => Message)
+    async logout(@Cookie() refreshToken, @Context('res') res: Response) {
+
+        const token = refreshToken["REFRESH_TOKEN"] ? refreshToken["REFRESH_TOKEN"].token : null
+
+        if (!token) {
+            return { success: true, message: 'Logout successful!' };
+        }
+
+        await this.authService.deleteRefreshToken(token);
+        res.cookie('REFRESH_TOKEN', '', { httpOnly: true, secure: true, expires: new Date() });
+
+        return { success: true, message: 'Logout successful!' };
+    }
     
     refreshTokens() { }
     
