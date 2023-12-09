@@ -6,7 +6,6 @@ import { BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { Token } from '@prisma/client';
 import { LoginDto } from "./dto/login-dto";
 import { Response } from "express";
-import { Tokens } from "@src/auth/iterfaces";
 import { UserAgent } from "@app/common/decorators/user-agent-decorator";
 import { Message } from '@src/common/global-endity/message-endity';
 import { RefreshToken } from '@app/common/decorators/refreshtoken-decorator';
@@ -42,25 +41,10 @@ export class AuthResolver {
                 throw new BadRequestException(`Can't login with deta: ${JSON.stringify(dto)}`);
             }
 
-            return this.sendRefreshTokenToCookies(tokens, res)
+            return this.authService.sendRefreshTokenToCookies(tokens, res)
         } catch (error) {
             throw error;
         }
-    }
-    
-    private async sendRefreshTokenToCookies(tokens: Tokens, res: Response): Promise<AccessToken> {
-        if (!tokens) {
-            throw new UnauthorizedException()
-        }
-
-        res.cookie("REFRESH_TOKEN", tokens.refreshToken, {
-            httpOnly: true,
-            sameSite: 'lax',
-            expires: new Date(tokens.refreshToken.exp),
-            path: '/'
-        })
-
-        return { accessToken: tokens.accessToken }
     }
 
     @Mutation(() => Message)
@@ -94,15 +78,9 @@ export class AuthResolver {
             if (!tokens) {
                 throw new UnauthorizedException();
             }
-            return this.sendRefreshTokenToCookies(tokens, res);
+            return this.authService.sendRefreshTokenToCookies(tokens, res);
         } catch (error) {
             throw error;
         }
     }
-    
-    googleAuth() { }
-    
-    googleAuthCallback() { }
-    
-    successGoogle() { }
 }

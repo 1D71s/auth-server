@@ -4,11 +4,20 @@ import { AuthResolver } from './auth.resolver';
 import { UserModule } from 'src/user/user.module';
 import { JwtModule } from "@nestjs/jwt";
 import { PrismaService } from '@src/common/prisma/prisma';
+import { AuthController } from './auth.controller';
+import { HttpModule } from '@nestjs/axios';
+import { PassportModule } from '@nestjs/passport';
+import { GoogleStrategy } from './strategy/google-strategy';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-    providers: [AuthResolver, AuthService, PrismaService],
+    providers: [AuthResolver, AuthService, PrismaService, GoogleStrategy],
+    controllers: [AuthController],
     imports: [
         UserModule,
+        HttpModule,
+        PassportModule,
+        ConfigModule.forRoot(),
         JwtModule.register({
             secret: process.env.PRIVATE_KEY || 'SECRET',
             signOptions: {

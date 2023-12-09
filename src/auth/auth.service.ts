@@ -1,15 +1,18 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { RegisterDto } from './dto/register-dto';
 import { UserService } from 'src/user/user.service';
 import { UserId } from './endity/userId-endity';
 import { LoginDto } from "./dto/login-dto";
 import { compareSync } from 'bcrypt';
-import { Token, User } from "@prisma/client";
+import { Provider, Token, User } from "@prisma/client";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@src/common/prisma/prisma";
 import { add } from 'date-fns';
 import { v4 } from 'uuid';
-import { Tokens } from "./iterfaces";
+import { GoogleUser, Tokens } from "./iterfaces";
+import { AccessToken } from "./endity/token-endity";
+import { Response } from "express";
+
 
 @Injectable()
 export class AuthService {
@@ -21,8 +24,7 @@ export class AuthService {
     ) {}
 
     async register(dto: RegisterDto): Promise<UserId> {
-        const userId = await this.userService.createUser(dto);
-        return userId;
+        return this.userService.createUser(dto);
     }
 
     async login(dto: LoginDto, agent: string): Promise<Tokens> {
@@ -58,18 +60,16 @@ export class AuthService {
         });
 
         if (_token) {
-            const updatedToken = await this.prismaService.token.update({
+            return  this.prismaService.token.update({
                 where: { token: _token.token },
                 data: {
                     token: v4(),
                     exp: add(new Date(), { months: 1 }),
                 },
             })
-
-            return updatedToken
-        } 
+        }
         
-        const newToken = await this.prismaService.token.create({
+        return this.prismaService.token.create({
             data: {
                 token: v4(),
                 exp: add(new Date(), { months: 1 }),
@@ -77,8 +77,6 @@ export class AuthService {
                 UserAgent: agent,
             },
         });
-
-        return newToken
     }
     
     async refreshTokens(refreshToken: Token, agent: string): Promise<Tokens> {
@@ -95,6 +93,46 @@ export class AuthService {
     deleteRefreshToken(token: string): Promise<Token> {
         return this.prismaService.token.delete({ where: { token } });
     }
+    
+    async sendRefreshTokenToCookies(tokens: Tokens, res: Response): Promise<AccessToken> {
+        if (!tokens) {
+            throw new UnauthorizedException()
+        }
 
-    async providerAuth() {}
+        res.cookie("REFRESH_TOKEN", tokens.refreshToken, {
+            httpOnly: true,
+            sameSite: 'lax',
+            expires: new Date(tokens.refreshToken.exp),
+            path: '/'
+        })
+
+        return { accessToken: tokens.accessToken }
+    }
+
+    async googleAuth(googleUser: GoogleUser, agent: string) {
+
+        const { email, firstName } = googleUser
+
+        const userExist = await this.userService.getUser(email)
+
+        if (userExist && userExist.provider === Provider.GOOGLE) {
+            return this.generateTokens(userExist, agent)
+        }
+        
+
+        const user = await this.userService.createUser({
+            email,
+            name: firstName,
+            provider: Provider.GOOGLE
+        })
+
+
+        if (!user) {
+            throw new BadRequestException(`Не получилось создать пользователя с email ${email} в Google auth`)
+        }
+
+        const newUser = await this.userService.getUser(user.id)
+
+        return this.generateTokens(newUser, agent)
+    }
 }
