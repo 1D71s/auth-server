@@ -9,9 +9,10 @@ import { HttpModule } from '@nestjs/axios';
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from './strategy/google-strategy';
 import { ConfigModule } from '@nestjs/config';
+import { GoogleGuard } from "@src/auth/guards/google-auth.guard";
 
 @Module({
-    providers: [AuthResolver, AuthService, PrismaService, GoogleStrategy],
+    providers: [AuthResolver, AuthService, PrismaService, GoogleStrategy, GoogleGuard],
     controllers: [AuthController],
     imports: [
         UserModule,

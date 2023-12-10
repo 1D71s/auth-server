@@ -95,6 +95,7 @@ export class AuthService {
     }
     
     async sendRefreshTokenToCookies(tokens: Tokens, res: Response): Promise<AccessToken> {
+
         if (!tokens) {
             throw new UnauthorizedException()
         }
@@ -111,14 +112,13 @@ export class AuthService {
 
     async googleAuth(googleUser: GoogleUser, agent: string) {
 
-        const { email, firstName } = googleUser
+        const { email, firstName } = googleUser;
 
         const userExist = await this.userService.getUser(email)
 
         if (userExist && userExist.provider === Provider.GOOGLE) {
             return this.generateTokens(userExist, agent)
         }
-        
 
         const user = await this.userService.createUser({
             email,
@@ -126,13 +126,12 @@ export class AuthService {
             provider: Provider.GOOGLE
         })
 
-
         if (!user) {
-            throw new BadRequestException(`Не получилось создать пользователя с email ${email} в Google auth`)
+            throw new BadRequestException(`Не получилось создать пользователя с email ${email} в Google auth`);
         }
 
-        const newUser = await this.userService.getUser(user.id)
+        const newUser = await this.userService.getUser(user.id);
 
-        return this.generateTokens(newUser, agent)
+        return this.generateTokens(newUser, agent);
     }
 }

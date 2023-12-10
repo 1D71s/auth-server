@@ -13,7 +13,6 @@ import { AccessToken } from './endity/token-endity';
 
 @Resolver()
 export class AuthResolver {
-
     constructor(private readonly authService: AuthService) { }
 
     @Mutation(() => UserId)
