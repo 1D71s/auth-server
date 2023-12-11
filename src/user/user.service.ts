@@ -12,21 +12,21 @@ export class UserService {
     
     async createUser(dto: Partial<User>): Promise<UserId> {
 
-        console.log(dto)
-
-        const user = await this.getUser(dto.email)
+        const user = await this.getUser(dto.email);
 
         if (user) {
-            throw new ConflictException('this email is used')
+            throw new ConflictException('this email is used');
         }
+
+        const name = dto.email.split('@')[0];
 
         const hashPassword = dto?.password ? this.hashPassword(dto.password) : null
 
         return this.prisma.user.create({
             data: {
-                name: dto?.name,
+                name: dto?.name ? dto.name : name,
                 email: dto?.email,
-                provider: dto?.provider ?? 'GOOGLE',
+                provider: dto?.provider,
                 password: hashPassword
             }
         });
@@ -52,7 +52,7 @@ export class UserService {
         return users;
     }
 
-    private hashPassword(password: string) {
+    private hashPassword(password: string): string {
         return hashSync(password, genSaltSync(10))
     }
 }

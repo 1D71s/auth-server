@@ -1,4 +1,11 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+    BadRequestException,
+    ConflictException,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    UnauthorizedException
+} from "@nestjs/common";
 import { RegisterDto } from './dto/register-dto';
 import { UserService } from 'src/user/user.service';
 import { UserId } from './endity/userId-endity';
@@ -30,7 +37,7 @@ export class AuthService {
     async login(dto: LoginDto, agent: string): Promise<Tokens> {
         const user = await this.userService.getUser(dto.email)
 
-        if (!user || !compareSync(dto.password, user.password)) {
+        if (!user || user.provider || !compareSync(dto.password, user.password)) {
             throw new UnauthorizedException('Wrong login or password!');
         }
 
@@ -110,19 +117,18 @@ export class AuthService {
         return { accessToken: tokens.accessToken }
     }
 
-    async googleAuth(googleUser: GoogleUser, agent: string) {
+    async googleAuth(googleUser: GoogleUser, agent: string): Promise<Tokens> {
 
-        const { email, firstName } = googleUser;
+        const { email } = googleUser;
 
         const userExist = await this.userService.getUser(email)
 
-        if (userExist && userExist.provider === Provider.GOOGLE) {
+        if (userExist) {
             return this.generateTokens(userExist, agent)
         }
 
         const user = await this.userService.createUser({
             email,
-            name: firstName,
             provider: Provider.GOOGLE
         })
 
