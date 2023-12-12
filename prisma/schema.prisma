@@ -14,8 +14,8 @@ model User {
   password    String?
   description String  @default("")
 
-  role Role @default(USER)
-  provider  Provider?
+  role     Role      @default(USER)
+  provider Provider?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

@@ -5,6 +5,11 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { AdminModule } from './admin/admin.module';
+import { JwtModule, JwtService } from "@nestjs/jwt";
+import * as process from "process";
+import { APP_GUARD } from "@nestjs/core";
+import { RolesGuard } from "@src/auth/guards/roles-guard";
 
 @Module({
     imports: [
@@ -15,9 +20,16 @@ import { ConfigModule } from '@nestjs/config';
             context: ({ req, res }) => ({ req, res })
         }),
         AuthModule,
-        ConfigModule.forRoot({ isGlobal: true })
+        ConfigModule.forRoot({ isGlobal: true }),
+        AdminModule,
     ],
     controllers: [],
-    providers: [],
+    providers: [
+        JwtService,
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard,
+        },
+    ],
 })
 export class AppModule {}

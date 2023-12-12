@@ -20,7 +20,7 @@ import { GoogleGuard } from "@src/auth/guards/google-auth.guard";
         PassportModule,
         ConfigModule.forRoot(),
         JwtModule.register({
-            secret: process.env.PRIVATE_KEY || 'SECRET',
+            secret: process.env.JWT_SECRET,
             signOptions: {
                 expiresIn: '5m'
             }

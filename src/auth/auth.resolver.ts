@@ -57,6 +57,7 @@ export class AuthResolver {
             }
     
             await this.authService.deleteRefreshToken(token);
+
             res.cookie('REFRESH_TOKEN', '', { httpOnly: true, secure: true, expires: new Date() });
     
             return { success: true, message: 'Logout successful!' };

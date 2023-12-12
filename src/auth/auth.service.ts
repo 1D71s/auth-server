@@ -45,9 +45,7 @@ export class AuthService {
     }
 
     private async generateTokens(user: User, agent: string): Promise<Tokens> {
-        const accessToken =
-            'Bearer ' +
-            this.jwtService.sign({
+        const accessToken = this.jwtService.sign({
                 id: user.id,
                 email: user.email,
                 role: user.role,
@@ -97,7 +95,13 @@ export class AuthService {
         return this.generateTokens(user, agent);
     }
 
-    deleteRefreshToken(token: string): Promise<Token> {
+    async deleteRefreshToken(token: string): Promise<Token> {
+        const tokenToDelete = await this.prismaService.token.findFirst({ where: { token } });
+
+        if (!tokenToDelete) {
+            throw new UnauthorizedException("Token Doesn't found!");
+        }
+
         return this.prismaService.token.delete({ where: { token } });
     }
     

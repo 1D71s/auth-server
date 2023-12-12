@@ -42,10 +42,15 @@ input UserEmail {
 }
 
 type Mutation {
-  editUserInfo: UserEntity!
+  editUserInfo(input: EditUserDto!): UserEntity!
   register(input: RegisterDto!): UserId!
   login(input: LoginDto!): AccessToken!
   logout: Message!
+}
+
+input EditUserDto {
+  description: String!
+  name: String!
 }
 
 input RegisterDto {
