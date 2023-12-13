@@ -2,11 +2,16 @@ import { Module } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminResolver } from './admin.resolver';
 import { UserModule } from "@src/user/user.module";
+import { PrismaService } from "@src/common/prisma/prisma";
+import { JwtStrategy } from "@src/auth/strategy/jwt-strategy";
+import { RolesGuard } from "@src/auth/guards/role-guard";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-      providers: [AdminResolver, AdminService],
+      providers: [AdminResolver, AdminService, PrismaService, JwtStrategy, RolesGuard],
       imports: [
-            UserModule
+          UserModule,
+          JwtModule
       ]
 })
 export class AdminModule {}

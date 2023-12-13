@@ -8,6 +8,7 @@ type UserEntity {
   email: String!
   description: String!
   role: String!
+  provider: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   isBlocked: Boolean!
@@ -46,6 +47,7 @@ type Mutation {
   register(input: RegisterDto!): UserId!
   login(input: LoginDto!): AccessToken!
   logout: Message!
+  banUser(input: BanDto!): UserEntity!
 }
 
 input EditUserDto {
@@ -63,4 +65,9 @@ input RegisterDto {
 input LoginDto {
   email: String!
   password: String!
+}
+
+input BanDto {
+  id: String!
+  isBlock: Boolean!
 }

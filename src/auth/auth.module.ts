@@ -10,9 +10,11 @@ import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from './strategy/google-strategy';
 import { ConfigModule } from '@nestjs/config';
 import { GoogleGuard } from "@src/auth/guards/google-auth.guard";
+import { JwtStrategy } from "@src/auth/strategy/jwt-strategy";
+import { RolesGuard } from "@src/auth/guards/role-guard";
 
 @Module({
-    providers: [AuthResolver, AuthService, PrismaService, GoogleStrategy, GoogleGuard],
+    providers: [AuthResolver, AuthService, PrismaService, GoogleStrategy, GoogleGuard, JwtStrategy, RolesGuard],
     controllers: [AuthController],
     imports: [
         UserModule,

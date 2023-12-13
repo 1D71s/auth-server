@@ -2,12 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserEntity } from './entity/user-entity';
 import { UserEmail } from '../auth/dto/user-email';
-import { NotFoundException, UseGuards } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
 import { EditUserDto } from "@src/user/dto/edit-user-dto";
-import { AuthGuard } from "@src/auth/guards/jwt-guard";
-import { User } from "@app/common/decorators/getuser-decorator";
-import { JwtPayload } from "@src/auth/iterfaces";
-import { Roles } from "@app/common/decorators/roles-decorator";
 
 @Resolver()
 export class UserResolver {
@@ -37,12 +33,9 @@ export class UserResolver {
         }
     }
 
-    @UseGuards(AuthGuard)
-    @Roles("ADMIN", "USER")
     @Query(() => [UserEntity])
-    async getAllUsers(@User() user: JwtPayload) {
+    async getAllUsers() {
         try {
-            console.log(user)
             return await this.userService.getAllUsers();
         } catch (error) {
             throw error;
