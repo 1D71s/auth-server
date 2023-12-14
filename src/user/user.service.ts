@@ -3,6 +3,7 @@ import { PrismaService } from 'src/common/prisma/prisma';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { UserId } from 'src/auth/endity/userId-endity';
 import { User } from '@prisma/client';
+import { EditUserDto } from "@src/user/dto/edit-user-dto";
 
 
 @Injectable()
@@ -31,7 +32,22 @@ export class UserService {
             }
         });
     }
-    
+
+    async editUserInfo(dto: EditUserDto, userId: string): Promise<User> {
+        const user = await this.getUser(userId);
+
+        if (!user) {
+            throw new NotFoundException('Users are not found!')
+        }
+
+        return this.prisma.user.update({
+            where: {id: userId},
+            data: {
+                description: dto?.description,
+                name: dto?.name
+            }
+        })
+    }
 
     async getUser(idOrEmail: string): Promise<User> {
 
@@ -46,7 +62,7 @@ export class UserService {
         const users = await this.prisma.user.findMany();
 
         if (users.length === 0) {
-            throw new NotFoundException({ message: 'Users are not found!' });
+            throw new NotFoundException('Users are not found!');
         }
 
         return users;

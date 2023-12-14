@@ -15,8 +15,7 @@ export interface ReqGoogleUser {
   user: GoogleUser
 }
 
-export interface JwtPayload {
+export interface JwtPayloadUser {
     id: string;
-    email: string;
     roles: string;
 }

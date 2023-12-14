@@ -2,17 +2,21 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UserEntity } from './entity/user-entity';
 import { UserEmail } from '../auth/dto/user-email';
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException, UseGuards } from "@nestjs/common";
 import { EditUserDto } from "@src/user/dto/edit-user-dto";
+import { User } from "@app/common/decorators/getuser-decorator";
+import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";
+import { JwtPayloadUser } from "@src/auth/iterfaces";
 
 @Resolver()
 export class UserResolver {
     constructor(private readonly userService: UserService) {}
 
     @Mutation(() => UserEntity)
-    async editUserInfo(@Args('input') dto: EditUserDto) {
+    @UseGuards(JwtAuthGuard)
+    async editUserInfo(@Args('input') dto: EditUserDto, @User() user: JwtPayloadUser) {
         try {
-            return this.userService
+            return this.userService.editUserInfo(dto, user.id)
         } catch (error) {
             throw error;
         }
