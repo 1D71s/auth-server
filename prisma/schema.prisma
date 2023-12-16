@@ -50,6 +50,7 @@ model Bans {
 }
 
 enum Role {
+  MOOD
   ADMIN
   MODER
   USER

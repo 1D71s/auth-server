@@ -61,6 +61,7 @@ type Mutation {
   login(input: LoginDto!): AccessToken!
   logout: Message!
   banUser(input: BanDto!): BanEntity!
+  changeRole(input: ChangeRoleDto!): UserEntity!
 }
 
 input EditUserDto {
@@ -84,4 +85,9 @@ input BanDto {
   userId: String!
   description: String!
   toDate: DateTime!
+}
+
+input ChangeRoleDto {
+  role: String!
+  id: String!
 }

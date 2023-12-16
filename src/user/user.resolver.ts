@@ -4,7 +4,7 @@ import { UserEntity } from './entity/user-entity';
 import { UserEmail } from '../auth/dto/user-email';
 import { BadRequestException, NotFoundException, UseGuards } from "@nestjs/common";
 import { EditUserDto } from "@src/user/dto/edit-user-dto";
-import { User } from "@app/common/decorators/getuser-decorator";
+import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { BanEntity } from "@src/admin/ban/endity/ban-endity";
@@ -41,9 +41,9 @@ export class UserResolver {
     @Query(() => [UserEntity])
     async getAllUsers() {
         try {
-            return await this.userService.getAllUsers();
+            return this.userService.getAllUsers();
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw new BadRequestException("Something went wrong.", error);
         }
     }
     @Query(() => [BanEntity])

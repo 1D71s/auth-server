@@ -1,4 +1,4 @@
-import { UserAgent } from '@app/common/decorators/user-agent-decorator';
+import { UserAgent } from '@app/common/decorators/getData/user-agent-decorator';
 import { Controller, Get, Req, Res, UseGuards, Query } from "@nestjs/common";
 import { AuthService } from './auth.service';
 import { ReqGoogleUser } from "@src/auth/iterfaces";

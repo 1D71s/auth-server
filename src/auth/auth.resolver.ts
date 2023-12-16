@@ -6,9 +6,9 @@ import { BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { Token } from '@prisma/client';
 import { LoginDto } from "./dto/login-dto";
 import { Response } from "express";
-import { UserAgent } from "@app/common/decorators/user-agent-decorator";
+import { UserAgent } from "@app/common/decorators/getData/user-agent-decorator";
 import { Message } from '@src/common/global-endity/message-endity';
-import { RefreshToken } from '@app/common/decorators/refreshtoken-decorator';
+import { RefreshToken } from '@app/common/decorators/getData/refreshtoken-decorator';
 import { AccessToken } from './endity/token-endity';
 
 @Resolver()

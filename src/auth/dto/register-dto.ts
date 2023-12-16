@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsString, MinLength, Validate } from "class-validator";
 import { UserEmail } from './user-email';
-import { IsPasswordsMatchingConstraint } from "@app/common/decorators/check-passwords";
+import { IsPasswordsMatchingConstraint } from "@app/common/decorators/validation/check-passwords";
 
 @InputType()
 export class RegisterDto extends UserEmail {
