@@ -5,8 +5,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { AdminModule } from './admin/admin.module';
 import { JwtService } from "@nestjs/jwt";
+import { BanModule } from '@src/admin/ban/ban.module';
 import * as process from "process";
 
 @Module({
@@ -19,7 +19,7 @@ import * as process from "process";
         }),
         AuthModule,
         ConfigModule.forRoot({ isGlobal: true }),
-        AdminModule,
+        BanModule,
     ],
     controllers: [],
     providers: [

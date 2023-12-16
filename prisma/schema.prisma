@@ -17,10 +17,11 @@ model User {
   role     Role      @default(USER)
   provider Provider?
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  Token     Token[]
-  isBlocked Boolean  @default(false) @map("is_blocked")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  sessions    Token[]
+  bans        Bans[]   @relation("Bans_User")
+  bansAsAdmin Bans[]   @relation("Bans_Admin")
 
   @@map("users")
 }
@@ -35,8 +36,22 @@ model Token {
   @@map("tokens")
 }
 
+model Bans {
+  banId       String   @id @default(uuid())
+  user        User     @relation(name: "Bans_User", fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  admin       User     @relation(name: "Bans_Admin", fields: [adminId], references: [id], onDelete: Cascade)
+  adminId     String
+  description String
+  startBan    DateTime @default(now())
+  endBan      DateTime
+
+  @@map("bans")
+}
+
 enum Role {
   ADMIN
+  MODER
   USER
 }
 

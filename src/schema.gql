@@ -11,13 +11,20 @@ type UserEntity {
   provider: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  isBlocked: Boolean!
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type BanEntity {
+  banId: String!
+  userId: String!
+  adminId: String!
+  endBan: DateTime!
+  description: String!
+}
 
 type UserId {
   id: String!
@@ -35,11 +42,17 @@ type AccessToken {
 type Query {
   getUser(input: UserEmail!): UserEntity!
   getAllUsers: [UserEntity!]!
+  getUserBans: [BanEntity!]!
   updateTokens: AccessToken!
+  getUserBansForAdmin(input: IdUserDto!): [BanEntity!]!
 }
 
 input UserEmail {
   email: String!
+}
+
+input IdUserDto {
+  id: String!
 }
 
 type Mutation {
@@ -47,7 +60,7 @@ type Mutation {
   register(input: RegisterDto!): UserId!
   login(input: LoginDto!): AccessToken!
   logout: Message!
-  banUser(input: BanDto!): UserEntity!
+  banUser(input: BanDto!): BanEntity!
 }
 
 input EditUserDto {
@@ -68,6 +81,7 @@ input LoginDto {
 }
 
 input BanDto {
-  id: String!
-  isBlock: Boolean!
+  userId: String!
+  description: String!
+  toDate: DateTime!
 }

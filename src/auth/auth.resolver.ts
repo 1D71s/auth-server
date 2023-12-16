@@ -27,7 +27,7 @@ export class AuthResolver {
             }
             return userId;
         } catch (error) {
-            throw error;
+            throw new BadRequestException("Something went wrong.");
         }
     }
 
@@ -42,7 +42,7 @@ export class AuthResolver {
 
             return this.authService.sendRefreshTokenToCookies(tokens, res)
         } catch (error) {
-            throw error;
+            throw new BadRequestException("Something went wrong.");
         }
     }
 
@@ -62,7 +62,7 @@ export class AuthResolver {
     
             return { success: true, message: 'Logout successful!' };
         } catch (error) {
-            throw error;
+            throw new BadRequestException("Something went wrong.");
         }
     }
     
@@ -80,7 +80,7 @@ export class AuthResolver {
             }
             return this.authService.sendRefreshTokenToCookies(tokens, res);
         } catch (error) {
-            throw error;
+            throw new BadRequestException("Something went wrong.");
         }
     }
 }

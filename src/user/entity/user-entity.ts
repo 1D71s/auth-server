@@ -25,7 +25,4 @@ export class UserEntity {
 
     @Field()
     updatedAt: Date;
-
-    @Field()
-    isBlocked: boolean
 }

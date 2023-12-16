@@ -2,9 +2,9 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { PrismaService } from 'src/common/prisma/prisma';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { UserId } from 'src/auth/endity/userId-endity';
-import { User } from '@prisma/client';
+import { Bans, User } from "@prisma/client";
 import { EditUserDto } from "@src/user/dto/edit-user-dto";
-
+import { FullUser } from "@src/user/interfaces";
 
 @Injectable()
 export class UserService {
@@ -49,11 +49,15 @@ export class UserService {
         })
     }
 
-    async getUser(idOrEmail: string): Promise<User> {
+    async getUser(idOrEmail: string): Promise<FullUser> {
 
         return this.prisma.user.findFirst({
-            where: { 
+            where: {
                 OR: [{ id: idOrEmail }, { email: idOrEmail }],
+            },
+            include: {
+                sessions: true,
+                bans: true
             }
         });
     }
@@ -66,6 +70,16 @@ export class UserService {
         }
 
         return users;
+    }
+
+    async getUserBans(id: string): Promise<Bans[]> {
+        const bans: Bans[] = await this.prisma.bans.findMany({ where: { userId: id } });
+
+        if (!bans) {
+            throw new NotFoundException({ message: 'Bans are not found!' });
+        }
+
+        return bans;
     }
 
     private hashPassword(password: string): string {
