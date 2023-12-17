@@ -29,10 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
         const activeBan = this.banService.checkUserBansByActive(user.bans)
 
-        if (activeBan) {
-            throw new UnauthorizedException("User account blocked!");
-        }
-
-        return { id: payload.id, role: user.role};
+        return { id: payload.id, role: user.role, ban: !!activeBan};
     }
 }

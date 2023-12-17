@@ -15,6 +15,7 @@ import { RolesGuard } from "@src/auth/guards/role-guard";
 import { UserService } from "@src/user/user.service";
 import { BanModule } from "@src/admin/ban/ban.module";
 import { BanService } from "@src/admin/ban/ban.service";
+import { RolesModule } from "@src/admin/roles/roles.module";
 
 @Module({
     providers: [
@@ -30,6 +31,7 @@ import { BanService } from "@src/admin/ban/ban.service";
     ],
     controllers: [AuthController],
     imports: [
+        RolesModule,
         UserModule,
         HttpModule,
         PassportModule,

@@ -14,7 +14,7 @@ export class RolesResolver {
     constructor(private readonly rolesService: RolesService) {}
 
     @Mutation(() => UserEntity)
-    async changeRole(@Args('input') dto: ChangeRoleDto, @User() user: JwtPayloadUser) {
+    changeRole(@Args('input') dto: ChangeRoleDto, @User() user: JwtPayloadUser) {
         try {
             return this.rolesService.changeRole(dto, user);
         } catch (error) {
@@ -23,7 +23,7 @@ export class RolesResolver {
     }
 
     @Query(() => [UserEntity])
-    async getUsersWithRoles(@Args('input') dto: RoleDto) {
+    getUsersWithRoles(@Args('input') dto: RoleDto) {
         try {
             return this.rolesService.getUsersWithRoles(dto)
         } catch (error) {

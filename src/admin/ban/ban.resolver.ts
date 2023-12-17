@@ -6,7 +6,7 @@ import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { BadRequestException } from "@nestjs/common";
 import { Roles } from "@app/common/decorators/getData/roles-decorator";
 import { BanEntity } from "@src/admin/ban/endity/ban-endity";
-import { IdUserDto } from "@src/user/dto/id-user-dto";
+import { IdDto } from "@src/common/global-dto/id-dto";
 import { UserService } from "@src/user/user.service";
 
 @Resolver()
@@ -18,18 +18,27 @@ export class BanResolver {
     ) {}
 
     @Mutation(() => BanEntity)
-    async banUser(@Args('input') dto: BanDto, @User() user: JwtPayloadUser) {
+    banUser(@Args('input') dto: BanDto, @User() user: JwtPayloadUser) {
         try {
-            return this.banService.banUser(dto, user.id);
+            return this.banService.banUser(dto, user);
         } catch (error) {
             throw new BadRequestException("Something went wrong.");
         }
     }
 
     @Query(() => [BanEntity])
-    async getUserBansForAdmin(@Args('input') dto: IdUserDto) {
+    getUserBansForAdmin(@Args('input') dto: IdDto) {
         try {
             return this.userService.getUserBans(dto.id)
+        } catch (error) {
+            throw new BadRequestException("Something went wrong.");
+        }
+    }
+
+    @Mutation(() => BanEntity)
+    deleteBan(@Args('input') dto: IdDto, @User() user: JwtPayloadUser) {
+        try {
+            return this.banService.deleteBan(dto.id, user)
         } catch (error) {
             throw new BadRequestException("Something went wrong.");
         }

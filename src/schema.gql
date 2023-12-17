@@ -43,7 +43,7 @@ type TokenEntity {
   token: String!
   exp: DateTime!
   userId: String!
-  user_agent: String!
+  UserAgent: String!
 }
 
 type Query {
@@ -51,21 +51,21 @@ type Query {
   getAllUsers: [UserEntity!]!
   getUserBans: [BanEntity!]!
   updateTokens: AccessToken!
-  getUserBansForAdmin(input: IdUserDto!): [BanEntity!]!
   getUsersWithRoles(input: RoleDto!): [UserEntity!]!
-  getAllSessions(input: IdUserDto!): [TokenEntity!]!
+  getUserBansForAdmin(input: IdDto!): [BanEntity!]!
+  getAllSessions: [TokenEntity!]!
 }
 
 input UserEmail {
   email: String!
 }
 
-input IdUserDto {
-  id: String!
-}
-
 input RoleDto {
   role: String!
+}
+
+input IdDto {
+  id: String!
 }
 
 type Mutation {
@@ -73,10 +73,11 @@ type Mutation {
   register(input: RegisterDto!): UserId!
   login(input: LoginDto!): AccessToken!
   logout: Message!
-  banUser(input: BanDto!): BanEntity!
   changeRole(input: ChangeRoleDto!): UserEntity!
+  banUser(input: BanDto!): BanEntity!
+  deleteBan(input: IdDto!): BanEntity!
   closeOneSession(input: RefreshTokenDto!): Message!
-  closeAllUserSession(input: IdUserDto!): Message!
+  closeAllUserSession: Message!
 }
 
 input EditUserDto {
@@ -96,15 +97,15 @@ input LoginDto {
   password: String!
 }
 
+input ChangeRoleDto {
+  role: String!
+  id: String!
+}
+
 input BanDto {
   userId: String!
   description: String!
   toDate: DateTime!
-}
-
-input ChangeRoleDto {
-  role: String!
-  id: String!
 }
 
 input RefreshTokenDto {

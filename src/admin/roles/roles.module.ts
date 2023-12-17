@@ -8,6 +8,9 @@ import { PrismaService } from "@src/common/prisma/prisma";
     providers: [RolesResolver, RolesService, PrismaService],
     imports: [
         UserModule
+    ],
+    exports: [
+        RolesService
     ]
 })
 export class RolesModule {}

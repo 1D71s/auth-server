@@ -4,7 +4,6 @@ import { UserService } from "@src/user/user.service";
 import { PrismaService } from "@src/common/prisma/prisma";
 import { Role, User } from "@prisma/client";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
-import { UserEntity } from "@src/user/entity/user-entity";
 import { RoleDto } from "@src/admin/roles/dto/role-dto";
 
 @Injectable()
@@ -32,7 +31,7 @@ export class RolesService {
         return this.prisma.user.findMany({ where: { role: dto.role as Role } });
     }
 
-    private checkRoleHierarchy(userRole: string, requiredRole: string): boolean {
+    public checkRoleHierarchy(userRole: string, requiredRole: string): boolean {
         const hierarchy: Record<string, string[]> = {
             [Role.MOOD]: [Role.ADMIN, Role.MODER, Role.USER],
             [Role.ADMIN]: [Role.MODER, Role.USER],

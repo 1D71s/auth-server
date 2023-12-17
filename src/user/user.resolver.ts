@@ -15,7 +15,7 @@ export class UserResolver {
 
     @Mutation(() => UserEntity)
     @UseGuards(JwtAuthGuard)
-    async editUserInfo(@Args('input') dto: EditUserDto, @User() user: JwtPayloadUser) {
+    editUserInfo(@Args('input') dto: EditUserDto, @User() user: JwtPayloadUser) {
         try {
             return this.userService.editUserInfo(dto, user.id)
         } catch (error) {
@@ -39,7 +39,7 @@ export class UserResolver {
     }
 
     @Query(() => [UserEntity])
-    async getAllUsers() {
+    getAllUsers() {
         try {
             return this.userService.getAllUsers();
         } catch (error) {
@@ -48,7 +48,7 @@ export class UserResolver {
     }
     @Query(() => [BanEntity])
     @UseGuards(JwtAuthGuard)
-    async getUserBans(@User() user: JwtPayloadUser) {
+    getUserBans(@User() user: JwtPayloadUser) {
         try {
             return this.userService.getUserBans(user.id)
         } catch (error) {

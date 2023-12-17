@@ -12,5 +12,5 @@ export class TokenEntity {
     userId: string;
 
     @Field()
-    user_agent: string;
+    UserAgent: string;
 }
