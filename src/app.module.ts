@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtService } from "@nestjs/jwt";
 import { BanModule } from '@src/admin/ban/ban.module';
 import { RolesModule } from '@src/admin/roles/roles.module';
+import { SessionsModule } from './sessions/sessions.module';
 import * as process from "process";
 
 @Module({
@@ -22,6 +23,7 @@ import * as process from "process";
         ConfigModule.forRoot({ isGlobal: true }),
         BanModule,
         RolesModule,
+        SessionsModule,
     ],
     controllers: [],
     providers: [

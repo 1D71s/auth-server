@@ -28,8 +28,8 @@ export class RolesService {
         })
     }
 
-    async getUsersByRoles(dto: RoleDto) {
-        //return this.prisma.user.findMany({ where: { role: dto.role as Role } })
+    async getUsersWithRoles(dto: RoleDto): Promise<User[]> {
+        return this.prisma.user.findMany({ where: { role: dto.role as Role } });
     }
 
     private checkRoleHierarchy(userRole: string, requiredRole: string): boolean {

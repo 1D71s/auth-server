@@ -49,12 +49,7 @@ export class AuthResolver {
     @Mutation(() => Message)
     async logout(@RefreshToken() refreshToken: Token | null, @Context('res') res: Response) {
         try {
-
             const token = refreshToken?.token
-
-            if (!token) {
-                return { success: true, message: 'Logout!' };
-            }
     
             await this.authService.deleteRefreshToken(token);
 

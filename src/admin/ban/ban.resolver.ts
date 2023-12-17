@@ -3,16 +3,13 @@ import { BanService } from './ban.service';
 import { BanDto } from "@src/admin/ban/dto/ban-dto";
 import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
-import { BadRequestException, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";
-import { RolesGuard } from "@src/auth/guards/role-guard";
+import { BadRequestException } from "@nestjs/common";
 import { Roles } from "@app/common/decorators/getData/roles-decorator";
 import { BanEntity } from "@src/admin/ban/endity/ban-endity";
 import { IdUserDto } from "@src/user/dto/id-user-dto";
 import { UserService } from "@src/user/user.service";
 
 @Resolver()
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Roles("MOOD", "ADMIN", "MODER")
 export class BanResolver {
     constructor(
