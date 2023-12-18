@@ -8,6 +8,7 @@ import { BadRequestException } from "@nestjs/common";
 import { TokenEntity } from "@src/sessions/entity/token-entity";
 import { Roles } from "@app/common/decorators/getData/roles-decorator";
 import { IdDto } from "@src/common/global-dto/id-dto";
+import { TokenUserIdDto } from "@src/admin/sessions.admin/dto/token-userId-dto";
 
 @Resolver()
 @Roles("MOOD", "ADMIN", "MODER")
@@ -15,9 +16,9 @@ export class SessionsAdminResolver {
     constructor(private readonly sessionsAdminService: SessionsAdminService) {}
 
     @Mutation(() => Message)
-    closeOneSessionAsAdmin(@Args('input') dto: RefreshTokenDto, @User() user: JwtPayloadUser) {
+    closeOneSessionAsAdmin(@Args('input') dto: TokenUserIdDto, @User() user: JwtPayloadUser) {
         try {
-            return this.sessionsAdminService.closeOneSessionAsAdmin();
+            return this.sessionsAdminService.closeOneSessionAsAdmin(dto, user);
         } catch (error) {
             throw new BadRequestException("Something went wrong.");
         }

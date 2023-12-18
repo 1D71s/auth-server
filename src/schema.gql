@@ -80,7 +80,7 @@ type Mutation {
   deleteBan(input: IdDto!): BanEntity!
   closeOneSession(input: RefreshTokenDto!): Message!
   closeAllUserSession: Message!
-  closeOneSessionAsAdmin(input: RefreshTokenDto!): Message!
+  closeOneSessionAsAdmin(input: TokenUserIdDto!): Message!
   closeAllUserSessionAsAdmin(input: IdDto!): Message!
 }
 
@@ -113,5 +113,10 @@ input BanDto {
 }
 
 input RefreshTokenDto {
+  token: String!
+}
+
+input TokenUserIdDto {
+  id: String!
   token: String!
 }

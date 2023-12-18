@@ -6,6 +6,7 @@ import { RolesService } from "@src/admin/roles/roles.service";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { SessionsService } from "@src/sessions/sessions.service";
 import { Message } from "@src/common/global-endity/message-endity";
+import { TokenUserIdDto } from "@src/admin/sessions.admin/dto/token-userId-dto";
 
 @Injectable()
 export class SessionsAdminService {
@@ -16,10 +17,30 @@ export class SessionsAdminService {
         private readonly sessionsService: SessionsService
     ) {}
 
-    async closeOneSessionAsAdmin() {}
+    async closeOneSessionAsAdmin(dto: TokenUserIdDto, admin: JwtPayloadUser) {
+        const user = await this.userService.getUser(dto.id);
+
+        if (!user) {
+            throw new NotFoundException({ message: 'User is not found!' });
+        }
+
+        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
+
+        if (!checkAccess) {
+            throw new ForbiddenException("No access!");
+        }
+
+        return this.sessionsService.closeOneSession(dto.token, dto.id);
+    }
 
     async closeAllUserSessionAsAdmin(userId: string, admin: JwtPayloadUser): Promise<Message> {
-        const checkAccess = this.checkAccessByRole(userId, admin.role)
+        const user = await this.userService.getUser(userId);
+
+        if (!user) {
+            throw new NotFoundException({ message: 'User is not found!' });
+        }
+
+        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
 
         if (!checkAccess) {
             throw new ForbiddenException("No access!");
@@ -29,7 +50,13 @@ export class SessionsAdminService {
     }
 
     async getAllUserSessionsAsAdmin(userId: string, admin: JwtPayloadUser): Promise<Token[]> {
-        const checkAccess = this.checkAccessByRole(admin.role, userId)
+        const user = await this.userService.getUser(userId);
+
+        if (!user) {
+            throw new NotFoundException({ message: 'User is not found!' });
+        }
+
+        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
 
         if (!checkAccess) {
             throw new ForbiddenException("No access!");
@@ -40,15 +67,5 @@ export class SessionsAdminService {
 
     async getAllSessionsAsAdmin(): Promise<Token[]> {
         return this.prisma.token.findMany();
-    }
-
-    private async checkAccessByRole(adminRole: string, userId: string): Promise<boolean> {
-        const user = await this.userService.getUser(userId);
-
-        if (!user) {
-            throw new NotFoundException({ message: 'User is not found!' });
-        }
-
-        return this.rolesService.checkRoleHierarchy(adminRole, user.role);
     }
 }
