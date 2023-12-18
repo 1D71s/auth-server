@@ -16,7 +16,7 @@ export class BanService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly userService: UserService,
-        private readonly roleService: RolesService
+        private readonly rolesService: RolesService
     ) {}
 
     async banUser(dto: BanDto, admin: JwtPayloadUser): Promise<Bans> {
@@ -31,7 +31,7 @@ export class BanService {
             throw new NotFoundException({ message: 'User is not found!' });
         }
 
-        const checkAccess = this.roleService.checkRoleHierarchy(admin.role, user.role)
+        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
 
         if (!checkAccess) {
             throw new ForbiddenException("No access!")
@@ -56,17 +56,17 @@ export class BanService {
 
     async deleteBan(banId: string, admin: JwtPayloadUser): Promise<Bans> {
 
-        const ban = await this.getBan(banId)
+        const ban = await this.getBan(banId);
 
         if (!ban) {
-            throw new NotFoundException("Ban has not found.")
+            throw new NotFoundException("Ban has not found.");
         }
 
-        const userForBan = await this.userService.getUser(ban.userId);
-        const checkAccess = this.roleService.checkRoleHierarchy(admin.role, userForBan.role)
+        const adminBan = await this.userService.getUser(ban.adminId);
+        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, adminBan.role);
 
         if (!checkAccess) {
-            throw new ForbiddenException("No access!")
+            throw new ForbiddenException("No access!");
         }
 
         return this.prisma.bans.delete({

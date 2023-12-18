@@ -54,6 +54,8 @@ type Query {
   getUsersWithRoles(input: RoleDto!): [UserEntity!]!
   getUserBansForAdmin(input: IdDto!): [BanEntity!]!
   getAllSessions: [TokenEntity!]!
+  getAllUserSessionsAsAdmin(input: IdDto!): [TokenEntity!]!
+  getAllSessionsAsAdmin: [TokenEntity!]!
 }
 
 input UserEmail {
@@ -78,6 +80,8 @@ type Mutation {
   deleteBan(input: IdDto!): BanEntity!
   closeOneSession(input: RefreshTokenDto!): Message!
   closeAllUserSession: Message!
+  closeOneSessionAsAdmin(input: RefreshTokenDto!): Message!
+  closeAllUserSessionAsAdmin(input: IdDto!): Message!
 }
 
 input EditUserDto {

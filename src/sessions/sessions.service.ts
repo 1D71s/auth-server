@@ -5,7 +5,6 @@ import { Message } from "@src/common/global-endity/message-endity";
 
 @Injectable()
 export class SessionsService {
-
     constructor(private readonly prisma: PrismaService) {}
 
     async closeOneSession(token: string, userId: string): Promise<Message> {
@@ -27,14 +26,14 @@ export class SessionsService {
     }
 
     async closeAllUserSession(userId: string): Promise<Message> {
-        const userSessions = await this.getAllSessions(userId);
+        const userSessions = await this.getAllUserSessions(userId);
 
         if (!userSessions) {
             throw new NotFoundException("User has not sessions.");
         }
 
         const remove = await this.prisma.token.deleteMany({
-            where: { userId: userId }
+            where: { userId }
         })
 
         if (!remove) {
@@ -50,9 +49,9 @@ export class SessionsService {
         })
     }
 
-    async getAllSessions(userId: string): Promise<Token[]> {
+    async getAllUserSessions(userId: string): Promise<Token[]> {
         return this.prisma.token.findMany({
-            where: { userId: userId }
+            where: { userId }
         })
     }
 }

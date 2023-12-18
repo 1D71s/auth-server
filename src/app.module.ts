@@ -9,6 +9,7 @@ import { JwtService } from "@nestjs/jwt";
 import { BanModule } from '@src/admin/ban/ban.module';
 import { RolesModule } from '@src/admin/roles/roles.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { SessionsAdminModule } from '@src/admin/sessions.admin/sessions.admin.module';
 import * as process from "process";
 
 @Module({
@@ -24,6 +25,7 @@ import * as process from "process";
         BanModule,
         RolesModule,
         SessionsModule,
+        SessionsAdminModule,
     ],
     controllers: [],
     providers: [

@@ -34,7 +34,7 @@ export class SessionsResolver {
     @Query(() => [TokenEntity])
     getAllSessions(@User() user: JwtPayloadUser) {
         try {
-            return this.sessionsService.getAllSessions(user.id)
+            return this.sessionsService.getAllUserSessions(user.id)
         } catch (error) {
             throw new BadRequestException("Something went wrong.");
         }
