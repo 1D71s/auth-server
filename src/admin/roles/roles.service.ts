@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { ChangeRoleDto } from "@src/admin/roles/dto/change-role-dto";
 import { UserService } from "@src/user/user.service";
 import { PrismaService } from "@src/common/prisma/prisma";
@@ -29,6 +29,20 @@ export class RolesService {
 
     async getUsersWithRoles(dto: RoleDto): Promise<User[]> {
         return this.prisma.user.findMany({ where: { role: dto.role as Role } });
+    }
+
+    public async validateUserAccess(userId: string, admin: JwtPayloadUser): Promise<void> {
+        const user = await this.userService.getUser(userId);
+
+        if (!user) {
+            throw new NotFoundException({ message: 'User is not found!' });
+        }
+
+        const checkAccess = this.checkRoleHierarchy(admin.role, user.role);
+
+        if (!checkAccess) {
+            throw new ForbiddenException("Access denied.");
+        }
     }
 
     public checkRoleHierarchy(userRole: string, requiredRole: string): boolean {

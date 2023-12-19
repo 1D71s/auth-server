@@ -18,9 +18,9 @@ export class BanResolver {
     ) {}
 
     @Mutation(() => BanEntity)
-    banUser(@Args('input') dto: BanDto, @User() user: JwtPayloadUser) {
+    banUser(@Args('input') dto: BanDto, @User() admin: JwtPayloadUser) {
         try {
-            return this.banService.banUser(dto, user);
+            return this.banService.banUser(dto, admin);
         } catch (error) {
             throw error;
         }
@@ -36,9 +36,9 @@ export class BanResolver {
     }
 
     @Mutation(() => BanEntity)
-    deleteBan(@Args('input') dto: IdDto, @User() user: JwtPayloadUser) {
+    deleteBan(@Args('input') dto: IdDto, @User() admin: JwtPayloadUser) {
         try {
-            return this.banService.deleteBan(dto.id, user)
+            return this.banService.deleteBan(dto.id, admin)
         } catch (error) {
             throw error;
         }

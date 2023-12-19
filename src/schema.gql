@@ -84,6 +84,8 @@ type Mutation {
   closeAllUserSession: Message!
   closeOneSessionAsAdmin(input: TokenUserIdDto!): Message!
   closeAllUserSessionAsAdmin(input: IdDto!): Message!
+  deleteUserAsAdmin(input: IdDto!): Message!
+  changePasswordAsAdmin(input: ChangePasswordAdminDto!): Message!
 }
 
 input EditUserDto {
@@ -92,9 +94,9 @@ input EditUserDto {
 }
 
 input ChangePasswordDto {
-  userPassword: String!
   password: String!
   passwordRepeat: String!
+  userPassword: String!
 }
 
 input RegisterDto {
@@ -127,4 +129,10 @@ input RefreshTokenDto {
 input TokenUserIdDto {
   id: String!
   token: String!
+}
+
+input ChangePasswordAdminDto {
+  password: String!
+  passwordRepeat: String!
+  id: String!
 }

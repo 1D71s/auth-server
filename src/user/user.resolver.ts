@@ -72,7 +72,7 @@ export class UserResolver {
     @UseGuards(JwtAuthGuard)
     changePassword(@Args('input') dto: ChangePasswordDto, @User() user: JwtPayloadUser) {
         try {
-            return this.userService.changePassword(dto, user.id)
+            return this.userService.changePasswordCheck(dto, user.id)
         } catch (error) {
             throw error;
         }

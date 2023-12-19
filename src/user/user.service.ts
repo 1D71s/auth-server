@@ -90,14 +90,30 @@ export class UserService {
         return bans;
     }
 
-    async changePassword(dto: ChangePasswordDto, userId: string): Promise<Message> {
+    async deleteUser(id: string): Promise<Message> {
+        const remove = await this.prisma.user.delete({
+            where: { id }
+        })
+
+        if (!remove) {
+            throw new BadRequestException();
+        }
+
+        return { success: true, message: "User has been removed." }
+    }
+
+    async changePasswordCheck(dto: ChangePasswordDto, userId: string): Promise<Message> {
         const user = await this.getUser(userId);
 
         if (!user || user.provider || !compareSync(dto.userPassword, user.password)) {
             throw new UnauthorizedException('Wrong password!');
         }
 
-        const hashPassword = this.hashPassword(dto.password);
+        return this.changePassword(userId, dto.password)
+    }
+
+    async changePassword(userId: string, password: string): Promise<Message> {
+        const hashPassword = this.hashPassword(password);
 
         const update = await this.prisma.user.update({
             where: { id: userId },
@@ -109,18 +125,6 @@ export class UserService {
         }
 
         return { success: true, message: "Password has been updated." }
-    }
-
-    async deleteUser(id: string): Promise<Message> {
-        const remove = await this.prisma.user.delete({
-            where: { id }
-        })
-
-        if (!remove) {
-            throw new BadRequestException();
-        }
-
-        return { success: true, message: "User has been removed." }
     }
 
     private hashPassword(password: string): string {

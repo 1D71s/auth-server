@@ -14,9 +14,9 @@ export class RolesResolver {
     constructor(private readonly rolesService: RolesService) {}
 
     @Mutation(() => UserEntity)
-    changeRole(@Args('input') dto: ChangeRoleDto, @User() user: JwtPayloadUser) {
+    changeRole(@Args('input') dto: ChangeRoleDto, @User() admin: JwtPayloadUser) {
         try {
-            return this.rolesService.changeRole(dto, user);
+            return this.rolesService.changeRole(dto, admin);
         } catch (error) {
             throw error;
         }

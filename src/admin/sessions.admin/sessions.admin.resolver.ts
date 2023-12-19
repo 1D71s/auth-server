@@ -16,27 +16,27 @@ export class SessionsAdminResolver {
     constructor(private readonly sessionsAdminService: SessionsAdminService) {}
 
     @Mutation(() => Message)
-    closeOneSessionAsAdmin(@Args('input') dto: TokenUserIdDto, @User() user: JwtPayloadUser) {
+    closeOneSessionAsAdmin(@Args('input') dto: TokenUserIdDto, @User() admin: JwtPayloadUser) {
         try {
-            return this.sessionsAdminService.closeOneSessionAsAdmin(dto, user);
+            return this.sessionsAdminService.closeOneSessionAsAdmin(dto, admin);
         } catch (error) {
             throw error;
         }
     }
 
     @Mutation(() => Message)
-    closeAllUserSessionAsAdmin(@Args('input') dto: IdDto, @User() user: JwtPayloadUser) {
+    closeAllUserSessionAsAdmin(@Args('input') dto: IdDto, @User() admin: JwtPayloadUser) {
         try {
-            return this.sessionsAdminService.closeAllUserSessionAsAdmin(dto.id, user);
+            return this.sessionsAdminService.closeAllUserSessionAsAdmin(dto.id, admin);
         } catch (error) {
             throw error;
         }
     }
 
     @Query(() => [TokenEntity])
-    getAllUserSessionsAsAdmin(@Args('input') dto: IdDto, @User() user: JwtPayloadUser) {
+    getAllUserSessionsAsAdmin(@Args('input') dto: IdDto, @User() admin: JwtPayloadUser) {
         try {
-            return this.sessionsAdminService.getAllUserSessionsAsAdmin(dto.id, user);
+            return this.sessionsAdminService.getAllUserSessionsAsAdmin(dto.id, admin);
         } catch (error) {
             throw error;
         }

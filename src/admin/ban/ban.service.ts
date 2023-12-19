@@ -25,17 +25,7 @@ export class BanService {
             throw new BadRequestException();
         }
 
-        const user = await this.userService.getUser(dto.userId);
-
-        if (!user) {
-            throw new NotFoundException({ message: 'User is not found!' });
-        }
-
-        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
-
-        if (!checkAccess) {
-            throw new ForbiddenException("No access!")
-        }
+        await this.rolesService.validateUserAccess(dto.userId, admin);
 
         const bans = await this.userService.getUserBans(dto.userId)
         const activeBuns = this.checkUserBansByActive(bans)
@@ -62,12 +52,7 @@ export class BanService {
             throw new NotFoundException("Ban has not found.");
         }
 
-        const adminBan = await this.userService.getUser(ban.adminId);
-        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, adminBan.role);
-
-        if (!checkAccess) {
-            throw new ForbiddenException("No access!");
-        }
+        await this.rolesService.validateUserAccess(ban.adminId, admin);
 
         return this.prisma.bans.delete({
             where: { banId }
