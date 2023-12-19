@@ -26,13 +26,13 @@ type BanEntity {
   description: String!
 }
 
-type UserId {
-  id: String!
-}
-
 type Message {
   success: Boolean!
   message: String!
+}
+
+type UserId {
+  id: String!
 }
 
 type AccessToken {
@@ -72,6 +72,8 @@ input IdDto {
 
 type Mutation {
   editUserInfo(input: EditUserDto!): UserEntity!
+  deleteUser: Message!
+  changePassword(input: ChangePasswordDto!): Message!
   register(input: RegisterDto!): UserId!
   login(input: LoginDto!): AccessToken!
   logout: Message!
@@ -87,6 +89,12 @@ type Mutation {
 input EditUserDto {
   description: String!
   name: String!
+}
+
+input ChangePasswordDto {
+  userPassword: String!
+  password: String!
+  passwordRepeat: String!
 }
 
 input RegisterDto {

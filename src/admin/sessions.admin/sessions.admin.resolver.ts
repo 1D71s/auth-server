@@ -20,7 +20,7 @@ export class SessionsAdminResolver {
         try {
             return this.sessionsAdminService.closeOneSessionAsAdmin(dto, user);
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -29,7 +29,7 @@ export class SessionsAdminResolver {
         try {
             return this.sessionsAdminService.closeAllUserSessionAsAdmin(dto.id, user);
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -38,7 +38,7 @@ export class SessionsAdminResolver {
         try {
             return this.sessionsAdminService.getAllUserSessionsAsAdmin(dto.id, user);
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -47,7 +47,7 @@ export class SessionsAdminResolver {
         try {
             return this.sessionsAdminService.getAllSessionsAsAdmin();
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 }

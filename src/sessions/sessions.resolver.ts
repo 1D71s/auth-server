@@ -18,7 +18,7 @@ export class SessionsResolver {
         try {
             return this.sessionsService.closeOneSession(dto.token, user.id);
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -27,7 +27,7 @@ export class SessionsResolver {
         try {
             return this.sessionsService.closeAllUserSession(user.id);
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -36,7 +36,7 @@ export class SessionsResolver {
         try {
             return this.sessionsService.getAllUserSessions(user.id)
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 }

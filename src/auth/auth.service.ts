@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { RegisterDto } from './dto/register-dto';
 import { UserService } from 'src/user/user.service';
 import { UserId } from './endity/userId-endity';
@@ -28,13 +28,13 @@ export class AuthService {
     }
 
     async login(dto: LoginDto, agent: string): Promise<Tokens> {
-        const user = await this.userService.getUser(dto.email)
+        const user = await this.userService.getUser(dto.email);
 
         if (!user || user.provider || !compareSync(dto.password, user.password)) {
             throw new UnauthorizedException('Wrong login or password!');
         }
 
-        return this.generateTokens(user, agent)
+        return this.generateTokens(user, agent);
     }
 
     private async generateTokens(user: User, agent: string): Promise<Tokens> {

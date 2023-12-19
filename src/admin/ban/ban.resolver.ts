@@ -22,7 +22,7 @@ export class BanResolver {
         try {
             return this.banService.banUser(dto, user);
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -31,7 +31,7 @@ export class BanResolver {
         try {
             return this.userService.getUserBans(dto.id)
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -40,7 +40,7 @@ export class BanResolver {
         try {
             return this.banService.deleteBan(dto.id, user)
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 }

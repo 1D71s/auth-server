@@ -1,10 +1,19 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException
+} from "@nestjs/common";
 import { PrismaService } from 'src/common/prisma/prisma';
-import { genSaltSync, hashSync } from 'bcrypt';
+import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 import { UserId } from 'src/auth/endity/userId-endity';
 import { Bans, User } from "@prisma/client";
 import { EditUserDto } from "@src/user/dto/edit-user-dto";
 import { FullUser } from "@src/user/interfaces";
+import { Message } from "@src/common/global-endity/message-endity";
+import { ChangePasswordDto } from "@src/user/dto/change-password-dto";
+
 
 @Injectable()
 export class UserService {
@@ -37,7 +46,7 @@ export class UserService {
         const user = await this.getUser(userId);
 
         if (!user) {
-            throw new NotFoundException('Users are not found!')
+            throw new NotFoundException({ message: 'User is not found!' });
         }
 
         return this.prisma.user.update({
@@ -50,7 +59,6 @@ export class UserService {
     }
 
     async getUser(idOrEmail: string): Promise<FullUser> {
-
         return this.prisma.user.findFirst({
             where: {
                 OR: [{ id: idOrEmail }, { email: idOrEmail }],
@@ -80,6 +88,39 @@ export class UserService {
         }
 
         return bans;
+    }
+
+    async changePassword(dto: ChangePasswordDto, userId: string): Promise<Message> {
+        const user = await this.getUser(userId);
+
+        if (!user || user.provider || !compareSync(dto.userPassword, user.password)) {
+            throw new UnauthorizedException('Wrong password!');
+        }
+
+        const hashPassword = this.hashPassword(dto.password);
+
+        const update = await this.prisma.user.update({
+            where: { id: userId },
+            data: { password: hashPassword }
+        })
+
+        if (!update) {
+            throw new BadRequestException();
+        }
+
+        return { success: true, message: "Password has been updated." }
+    }
+
+    async deleteUser(id: string): Promise<Message> {
+        const remove = await this.prisma.user.delete({
+            where: { id }
+        })
+
+        if (!remove) {
+            throw new BadRequestException();
+        }
+
+        return { success: true, message: "User has been removed." }
     }
 
     private hashPassword(password: string): string {

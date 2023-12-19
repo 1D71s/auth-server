@@ -18,7 +18,7 @@ export class RolesResolver {
         try {
             return this.rolesService.changeRole(dto, user);
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -27,7 +27,7 @@ export class RolesResolver {
         try {
             return this.rolesService.getUsersWithRoles(dto)
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 }

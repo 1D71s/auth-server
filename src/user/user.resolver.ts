@@ -8,6 +8,8 @@ import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { BanEntity } from "@src/admin/ban/endity/ban-endity";
+import { Message } from "@src/common/global-endity/message-endity";
+import { ChangePasswordDto } from "@src/user/dto/change-password-dto";
 
 @Resolver()
 export class UserResolver {
@@ -19,7 +21,7 @@ export class UserResolver {
         try {
             return this.userService.editUserInfo(dto, user.id)
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -34,7 +36,7 @@ export class UserResolver {
 
             return user
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
         }
     }
 
@@ -43,7 +45,7 @@ export class UserResolver {
         try {
             return this.userService.getAllUsers();
         } catch (error) {
-            throw new BadRequestException("Something went wrong.", error);
+            throw error;
         }
     }
     @Query(() => [BanEntity])
@@ -52,7 +54,27 @@ export class UserResolver {
         try {
             return this.userService.getUserBans(user.id)
         } catch (error) {
-            throw new BadRequestException("Something went wrong.");
+            throw error;
+        }
+    }
+
+    @Mutation(() => Message)
+    @UseGuards(JwtAuthGuard)
+    deleteUser(@User() user: JwtPayloadUser) {
+        try {
+            return this.userService.deleteUser(user.id)
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @Mutation(() => Message)
+    @UseGuards(JwtAuthGuard)
+    changePassword(@Args('input') dto: ChangePasswordDto, @User() user: JwtPayloadUser) {
+        try {
+            return this.userService.changePassword(dto, user.id)
+        } catch (error) {
+            throw error;
         }
     }
 }

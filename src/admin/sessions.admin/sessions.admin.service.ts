@@ -17,51 +17,32 @@ export class SessionsAdminService {
         private readonly sessionsService: SessionsService
     ) {}
 
-    async closeOneSessionAsAdmin(dto: TokenUserIdDto, admin: JwtPayloadUser) {
-        const user = await this.userService.getUser(dto.id);
+    private async validateUserAccess(userId: string, admin: JwtPayloadUser): Promise<void> {
+        const user = await this.userService.getUser(userId);
 
         if (!user) {
             throw new NotFoundException({ message: 'User is not found!' });
         }
 
-        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
+        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role);
 
         if (!checkAccess) {
-            throw new ForbiddenException("No access!");
+            throw new ForbiddenException("Access denied.");
         }
+    }
 
+    async closeOneSessionAsAdmin(dto: TokenUserIdDto, admin: JwtPayloadUser): Promise<Message> {
+        await this.validateUserAccess(dto.id, admin);
         return this.sessionsService.closeOneSession(dto.token, dto.id);
     }
 
     async closeAllUserSessionAsAdmin(userId: string, admin: JwtPayloadUser): Promise<Message> {
-        const user = await this.userService.getUser(userId);
-
-        if (!user) {
-            throw new NotFoundException({ message: 'User is not found!' });
-        }
-
-        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
-
-        if (!checkAccess) {
-            throw new ForbiddenException("No access!");
-        }
-
+        await this.validateUserAccess(userId, admin);
         return this.sessionsService.closeAllUserSession(userId);
     }
 
     async getAllUserSessionsAsAdmin(userId: string, admin: JwtPayloadUser): Promise<Token[]> {
-        const user = await this.userService.getUser(userId);
-
-        if (!user) {
-            throw new NotFoundException({ message: 'User is not found!' });
-        }
-
-        const checkAccess = this.rolesService.checkRoleHierarchy(admin.role, user.role)
-
-        if (!checkAccess) {
-            throw new ForbiddenException("No access!");
-        }
-
+        await this.validateUserAccess(userId, admin);
         return this.sessionsService.getAllUserSessions(userId);
     }
 

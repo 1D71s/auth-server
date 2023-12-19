@@ -19,7 +19,7 @@ export class SessionsService {
         })
 
         if (!remove) {
-            throw new BadRequestException()
+            throw new BadRequestException();
         }
 
         return { success: true, message: "Session has been removed." }
@@ -28,19 +28,19 @@ export class SessionsService {
     async closeAllUserSession(userId: string): Promise<Message> {
         const userSessions = await this.getAllUserSessions(userId);
 
-        if (!userSessions) {
+        if (!userSessions.length) {
             throw new NotFoundException("User has not sessions.");
         }
 
         const remove = await this.prisma.token.deleteMany({
-            where: { userId }
+            where: { userId: userId as string }
         })
 
         if (!remove) {
-            throw new BadRequestException()
+            throw new BadRequestException();
         }
 
-        return { success: true, message: "Sessions has been removed." }
+        return { success: true, message: `${remove.count} sessions has been removed.` }
     }
 
     async getOneUserSession(token: string, userId: string): Promise<Token> {
