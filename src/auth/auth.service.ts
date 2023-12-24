@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { RegisterDto } from './dto/register-dto';
 import { UserService } from 'src/user/user.service';
 import { UserId } from './endity/userId-endity';
@@ -13,14 +13,13 @@ import { GoogleUser, Tokens } from "./iterfaces";
 import { AccessToken } from "./endity/token-endity";
 import { Response } from "express";
 
-
 @Injectable()
 export class AuthService {
 
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
-        private readonly prismaService: PrismaService
+        private readonly prismaService: PrismaService,
     ) {}
 
     async register(dto: RegisterDto): Promise<UserId> {

@@ -8,7 +8,7 @@ type UserEntity {
   email: String!
   description: String!
   role: String!
-  provider: String!
+  provider: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -86,10 +86,12 @@ type Mutation {
   closeAllUserSessionAsAdmin(input: IdDto!): Message!
   deleteUserAsAdmin(input: IdDto!): Message!
   changePasswordAsAdmin(input: ChangePasswordAdminDto!): Message!
+  sendEmail(to: String!, subject: String!, text: String!): Boolean!
+  sendCode: Boolean!
+  confirmEmail(input: CodeDto!): Boolean!
 }
 
 input EditUserDto {
-  description: String!
   name: String!
 }
 
@@ -135,4 +137,8 @@ input ChangePasswordAdminDto {
   password: String!
   passwordRepeat: String!
   id: String!
+}
+
+input CodeDto {
+  code: String!
 }

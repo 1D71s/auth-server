@@ -17,8 +17,8 @@ export class UserEntity {
     @Field()
     role: string;
 
-    @Field()
-    provider: string
+    @Field({ nullable: true })
+    provider?: string;
 
     @Field()
     createdAt: Date;

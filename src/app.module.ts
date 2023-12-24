@@ -11,6 +11,8 @@ import { RolesModule } from '@src/admin/roles/roles.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { SessionsAdminModule } from '@src/admin/sessions.admin/sessions.admin.module';
 import { UserAdminModule } from '@src/admin/user.admin/user.admin.module';
+import { MailModule } from './mail/mail.module';
+import { VerificationModule } from './verification/verification.module';
 import * as process from "process";
 
 @Module({
@@ -28,6 +30,8 @@ import * as process from "process";
         SessionsModule,
         SessionsAdminModule,
         UserAdminModule,
+        MailModule,
+        VerificationModule,
     ],
     controllers: [],
     providers: [

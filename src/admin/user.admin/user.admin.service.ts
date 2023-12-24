@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ChangePasswordAdminDto } from "@src/admin/user.admin/dto/change-password-admin-dto";
 import { UserService } from "@src/user/user.service";
 import { RolesService } from "@src/admin/roles/roles.service";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { Message } from "@src/common/global-endity/message-endity";
-import { PrismaService } from "@src/common/prisma/prisma";
 
 @Injectable()
 export class UserAdminService {
@@ -14,7 +13,7 @@ export class UserAdminService {
         private readonly rolesService: RolesService,
     ) {}
 
-    async changePasswordAsAdmin(dto: ChangePasswordAdminDto, admin: JwtPayloadUser) {
+    async changePasswordAsAdmin(dto: ChangePasswordAdminDto, admin: JwtPayloadUser): Promise<Message> {
         await this.rolesService.validateUserAccess(dto.id, admin)
         return this.userService.changePassword(dto.id, dto.password)
     }

@@ -12,16 +12,17 @@ model User {
   name        String
   email       String  @unique
   password    String?
-  description String  @default("")
+  emailVerify Boolean @default(false)
 
   role     Role      @default(USER)
   provider Provider?
 
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  sessions    Token[]
-  bans        Bans[]   @relation("Bans_User")
-  bansAsAdmin Bans[]   @relation("Bans_Admin")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  sessions     Token[]
+  bans         Bans[]         @relation("Bans_User")
+  bansAsAdmin  Bans[]         @relation("Bans_Admin")
+  emailConfirm EmailConfirm[]
 
   @@map("users")
 }
@@ -34,6 +35,13 @@ model Token {
   UserAgent String   @map("user_agent")
 
   @@map("tokens")
+}
+
+model EmailConfirm {
+  code   String   @unique
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  exp    DateTime
 }
 
 model Bans {

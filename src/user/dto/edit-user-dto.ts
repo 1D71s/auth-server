@@ -6,9 +6,5 @@ export class EditUserDto {
 
     @IsString()
     @Field()
-    readonly description: string;
-
-    @IsString()
-    @Field()
     readonly name: string;
 }
