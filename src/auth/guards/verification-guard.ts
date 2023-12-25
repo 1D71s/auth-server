@@ -2,16 +2,16 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
-export class CheckBanGuard implements CanActivate {
+export class CheckVerificationGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean {
 
         const ctx = GqlExecutionContext.create(context);
-        const activeBan = ctx.getContext().req.user.ban;
+        const verificationEmail = ctx.getContext().req.user.emailVerify;
 
-        if (activeBan) {
-            throw new UnauthorizedException("User account blocked!");
+        if (!verificationEmail) {
+            throw new UnauthorizedException("User account is not verified");
         }
 
-        return true;
+        return true
     }
 }

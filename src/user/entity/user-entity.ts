@@ -12,7 +12,7 @@ export class UserEntity {
     email: string
 
     @Field()
-    description: string
+    emailVerify: boolean;
 
     @Field()
     role: string;

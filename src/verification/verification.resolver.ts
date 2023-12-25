@@ -5,6 +5,7 @@ import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";
 import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { CodeDto } from "@src/verification/dto/code-dto";
+import { UserEntity } from "@src/user/entity/user-entity";
 
 @Resolver()
 @UseGuards(JwtAuthGuard)
@@ -20,7 +21,7 @@ export class VerificationResolver {
         }
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => UserEntity)
     confirmEmail(@Args('input') dto: CodeDto, @User() user: JwtPayloadUser) {
         try {
             return this.verificationService.confirmEmail(dto.code, user);

@@ -10,6 +10,7 @@ import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { BanEntity } from "@src/admin/ban/endity/ban-endity";
 import { Message } from "@src/common/global-endity/message-endity";
 import { ChangePasswordDto } from "@src/user/dto/change-password-dto";
+import { CheckVerificationGuard } from "@src/auth/guards/verification-guard";
 
 @Resolver()
 export class UserResolver {
@@ -45,7 +46,7 @@ export class UserResolver {
         }
     }
     @Query(() => [BanEntity])
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, CheckVerificationGuard)
     getUserBans(@User() user: JwtPayloadUser) {
         try {
             return this.userService.getUserBans(user.id)

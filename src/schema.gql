@@ -6,7 +6,7 @@ type UserEntity {
   id: String!
   name: String!
   email: String!
-  description: String!
+  emailVerify: Boolean!
   role: String!
   provider: String
   createdAt: DateTime!
@@ -88,7 +88,7 @@ type Mutation {
   changePasswordAsAdmin(input: ChangePasswordAdminDto!): Message!
   sendEmail(to: String!, subject: String!, text: String!): Boolean!
   sendCode: Boolean!
-  confirmEmail(input: CodeDto!): Boolean!
+  confirmEmail(input: CodeDto!): UserEntity!
 }
 
 input EditUserDto {

@@ -2,10 +2,10 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import * as process from "process";
 import { UserService } from "@src/user/user.service";
-import { User } from "@prisma/client";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { BanService } from "@src/admin/ban/ban.service";
+import { GqlExecutionContext } from "@nestjs/graphql";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -29,6 +29,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
         const activeBan = this.banService.checkUserBansByActive(user.bans)
 
-        return { id: payload.id, role: user.role, ban: !!activeBan, email: user.email};
+        return {
+            id: payload.id,
+            role: user.role,
+            ban: !!activeBan,
+            email: user.email,
+            emailVerify: user.emailVerify
+        };
     }
 }
