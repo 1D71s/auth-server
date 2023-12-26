@@ -19,4 +19,5 @@ export interface JwtPayloadUser {
     id: string;
     email: string;
     role: string;
+    session: string
 }
