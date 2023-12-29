@@ -16,6 +16,7 @@ import { UserService } from "@src/user/user.service";
 import { BanModule } from "@src/admin/ban/ban.module";
 import { BanService } from "@src/admin/ban/ban.service";
 import { RolesModule } from "@src/admin/roles/roles.module";
+import { AttemptModule } from "@src/attempt/attempt.module";
 
 @Module({
     providers: [
@@ -36,6 +37,7 @@ import { RolesModule } from "@src/admin/roles/roles.module";
         HttpModule,
         PassportModule,
         BanModule,
+        AttemptModule,
         ConfigModule.forRoot(),
         JwtModule.register({
             secret: process.env.JWT_SECRET,

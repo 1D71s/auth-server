@@ -37,7 +37,7 @@ export class AuthResolver {
             const tokens = await this.authService.login(dto, agent);
 
             if (!tokens) {
-                throw new BadRequestException(`Can't login with deta: ${JSON.stringify(dto)}`);
+                throw new BadRequestException(`Can't login with data: ${JSON.stringify(dto)}`);
             }
 
             return this.authService.sendRefreshTokenToCookies(tokens, res)

@@ -86,7 +86,6 @@ type Mutation {
   closeAllUserSessionAsAdmin(input: IdDto!): Message!
   deleteUserAsAdmin(input: IdDto!): Message!
   changePasswordAsAdmin(input: ChangePasswordAdminDto!): Message!
-  sendEmail(to: String!, subject: String!, text: String!): Boolean!
   sendCode: Boolean!
   confirmEmail(input: CodeDto!): UserEntity!
 }

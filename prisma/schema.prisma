@@ -42,6 +42,8 @@ model EmailConfirm {
   user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   exp    DateTime
+
+  @@map("email_confirm")
 }
 
 model Bans {
@@ -55,6 +57,21 @@ model Bans {
   endBan      DateTime
 
   @@map("bans")
+}
+
+model Attempt {
+  id        String      @id @default(uuid())
+  userId    String
+  where     AttemptType
+  exp       DateTime
+  UserAgent String
+
+  @@map("attempt")
+}
+
+enum AttemptType {
+  LOGIN
+  CODE
 }
 
 enum Role {

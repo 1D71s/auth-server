@@ -13,6 +13,7 @@ import { SessionsAdminModule } from '@src/admin/sessions.admin/sessions.admin.mo
 import { UserAdminModule } from '@src/admin/user.admin/user.admin.module';
 import { MailModule } from './mail/mail.module';
 import { VerificationModule } from './verification/verification.module';
+import { AttemptModule } from './attempt/attempt.module';
 import * as process from "process";
 
 @Module({
@@ -32,6 +33,7 @@ import * as process from "process";
         UserAdminModule,
         MailModule,
         VerificationModule,
+        AttemptModule,
     ],
     controllers: [],
     providers: [
