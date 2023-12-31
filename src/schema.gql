@@ -76,8 +76,8 @@ type Mutation {
   changePassword(input: ChangePasswordDto!): Message!
   register(input: RegisterDto!): UserId!
   login(input: LoginDto!): AccessToken!
-  sendPasswordUpdateEmail: String!
-  resetPassword: Boolean!
+  sendPasswordUpdateEmail(input: UserEmail!): Boolean!
+  resetPassword(input: ResetPasswordDto!): Message!
   logout: Message!
   changeRole(input: ChangeRoleDto!): UserEntity!
   banUser(input: BanDto!): BanEntity!
@@ -112,6 +112,12 @@ input RegisterDto {
 input LoginDto {
   email: String!
   password: String!
+}
+
+input ResetPasswordDto {
+  token: String!
+  password: String!
+  passwordRepeat: String!
 }
 
 input ChangeRoleDto {

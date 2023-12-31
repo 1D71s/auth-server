@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException
+} from "@nestjs/common";
 import { RegisterDto } from './dto/register-dto';
 import { UserService } from 'src/user/user.service';
 import { UserId } from './endity/userId-endity';
@@ -14,6 +20,10 @@ import { AccessToken } from "./endity/token-endity";
 import { Response } from "express";
 import { AttemptService } from "@src/attempt/attempt.service";
 import { randomBytes } from 'crypto';
+import { UserEmail } from "@src/auth/dto/user-email";
+import { MailService } from "@src/mail/mail.service";
+import { Message } from "@src/common/global-endity/message-endity";
+import { ResetPasswordDto } from "@src/auth/dto/reset-password-dto";
 
 @Injectable()
 export class AuthService {
@@ -21,7 +31,8 @@ export class AuthService {
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly prismaService: PrismaService,
-        private readonly attemptService: AttemptService
+        private readonly attemptService: AttemptService,
+        private readonly mailService: MailService
     ) {}
 
     async register(dto: RegisterDto): Promise<UserId> {
@@ -124,11 +135,53 @@ export class AuthService {
         return { accessToken: tokens.accessToken }
     }
 
-    async sendPasswordUpdateEmail() {
-        return this.generateResetToken()
+    async sendPasswordUpdateEmail(dto: UserEmail, agent: string): Promise<boolean> {
+        const user = await this.userService.getUser(dto.email);
+
+        if (!user || user.provider) {
+            throw new NotFoundException('User not found.');
+        }
+
+        const checkExistReset = await this.prismaService.resetToken.findMany({
+            where: { userId: user.id, UserAgent: agent  }
+        })
+
+        if (checkExistReset && checkExistReset.some(item => item.exp > new Date())) {
+            throw new ConflictException('Reset token already exists and is still valid.');
+        }
+
+        await this.prismaService.resetToken.deleteMany({ where: { userId: user.id, UserAgent: agent } });
+
+        const resetToken = this.generateResetToken();
+
+        const expirationDate = new Date();
+        expirationDate.setMinutes(expirationDate.getMinutes() + 5);
+
+        const saveToken = await this.prismaService.resetToken.create({
+            data: {
+                token: resetToken,
+                userId: user.id,
+                UserAgent: agent,
+                exp: expirationDate
+            }
+        })
+
+        await this.mailService.sendEmail(user.email, 'RESET PASSWORD', saveToken.token);
+        return true;
     }
 
-    async resetPassword() {}
+    async resetPassword(dto: ResetPasswordDto): Promise<Message> {
+        const resetToken = await this.prismaService.resetToken.findFirst({
+            where: { token: dto.token }
+        })
+
+        if (!resetToken || resetToken.exp < new Date()) {
+            throw new NotFoundException("The token does not exist or has expired.");
+        }
+
+        await this.prismaService.resetToken.deleteMany( { where: { token: resetToken.token} } );
+        return this.userService.changePassword(resetToken.userId, dto.password);
+    }
 
     private generateResetToken(): string {
         return randomBytes(32).toString('hex');

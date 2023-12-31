@@ -106,7 +106,7 @@ export class UserService {
             throw new UnauthorizedException('Wrong password!');
         }
 
-        return this.changePassword(userId, dto.password)
+        return this.changePassword(userId, dto.password);
     }
 
     async changePassword(userId: string, password: string): Promise<Message> {

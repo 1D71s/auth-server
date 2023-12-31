@@ -10,6 +10,8 @@ import { UserAgent } from "@app/common/decorators/getData/user-agent-decorator";
 import { Message } from '@src/common/global-endity/message-endity';
 import { RefreshToken } from '@app/common/decorators/getData/refreshtoken-decorator';
 import { AccessToken } from './endity/token-endity';
+import { UserEmail } from "@src/auth/dto/user-email";
+import { ResetPasswordDto } from "@src/auth/dto/reset-password-dto";
 
 @Resolver()
 export class AuthResolver {
@@ -46,13 +48,23 @@ export class AuthResolver {
         }
     }
 
-    @Mutation(() => String)
-    sendPasswordUpdateEmail() {
-        return this.authService.sendPasswordUpdateEmail();
+    @Mutation(() => Boolean)
+    sendPasswordUpdateEmail(@Args('input') dto: UserEmail, @UserAgent() agent: string) {
+        try {
+            return this.authService.sendPasswordUpdateEmail(dto, agent);
+        } catch (error) {
+            throw error;
+        }
     }
 
-    @Mutation(() => Boolean)
-    resetPassword() {}
+    @Mutation(() => Message)
+    resetPassword(@Args('input') dto: ResetPasswordDto) {
+        try {
+            return this.authService.resetPassword(dto)
+        } catch (error) {
+            throw error;
+        }
+    }
 
     @Mutation(() => Message)
     async logout(@RefreshToken() refreshToken: Token | null, @Context('res') res: Response) {
