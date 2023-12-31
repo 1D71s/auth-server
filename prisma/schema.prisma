@@ -64,9 +64,19 @@ model Attempt {
   userId    String
   where     AttemptType
   exp       DateTime
+  count     Int         @default(1)
   UserAgent String
 
   @@map("attempt")
+}
+
+model ResetToken {
+  token     String   @unique
+  exp       DateTime
+  userId    String
+  UserAgent String   @map("user_agent")
+
+  @@map("reset_token")
 }
 
 enum AttemptType {

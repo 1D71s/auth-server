@@ -6,6 +6,7 @@ import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { CodeDto } from "@src/verification/dto/code-dto";
 import { UserEntity } from "@src/user/entity/user-entity";
+import { UserAgent } from "@app/common/decorators/getData/user-agent-decorator";
 
 @Resolver()
 @UseGuards(JwtAuthGuard)
@@ -22,9 +23,9 @@ export class VerificationResolver {
     }
 
     @Mutation(() => UserEntity)
-    confirmEmail(@Args('input') dto: CodeDto, @User() user: JwtPayloadUser) {
+    confirmEmail(@Args('input') dto: CodeDto, @User() user: JwtPayloadUser, @UserAgent() agent: string) {
         try {
-            return this.verificationService.confirmEmail(dto.code, user);
+            return this.verificationService.confirmEmail(dto.code, user, agent);
         } catch (error) {
             throw error;
         }

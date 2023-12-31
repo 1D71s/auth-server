@@ -46,6 +46,14 @@ export class AuthResolver {
         }
     }
 
+    @Mutation(() => String)
+    sendPasswordUpdateEmail() {
+        return this.authService.sendPasswordUpdateEmail();
+    }
+
+    @Mutation(() => Boolean)
+    resetPassword() {}
+
     @Mutation(() => Message)
     async logout(@RefreshToken() refreshToken: Token | null, @Context('res') res: Response) {
         try {

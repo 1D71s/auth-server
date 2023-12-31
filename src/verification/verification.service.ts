@@ -3,12 +3,15 @@ import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { PrismaService } from "@src/common/prisma/prisma";
 import { MailService } from "@src/mail/mail.service";
 import { UserEntity } from "@src/user/entity/user-entity";
+import { AttemptService } from "@src/attempt/attempt.service";
+import { AttemptType } from "@prisma/client";
 
 @Injectable()
 export class VerificationService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly mailService: MailService,
+        private readonly attemptService: AttemptService
     ) {}
 
     async sendConfirmCode(user: JwtPayloadUser): Promise<boolean> {
@@ -39,7 +42,11 @@ export class VerificationService {
         return true
     }
 
-    async confirmEmail(code: string, user: JwtPayloadUser): Promise<UserEntity> {
+    async confirmEmail(code: string, user: JwtPayloadUser, agent: string): Promise<UserEntity> {
+        const attemptCheck = { userId: user.id, where: AttemptType.CODE, user_agent: agent };
+
+        await this.attemptService.check(attemptCheck)
+
         const findCode = await this.prismaService.emailConfirm.findFirst({
             where: {
                 code,
@@ -52,6 +59,7 @@ export class VerificationService {
         }
 
         await this.deleteConfirmationCodes(user.id);
+        await this.attemptService.remove(attemptCheck)
 
         return this.prismaService.user.update({
             where: { id: user.id },
