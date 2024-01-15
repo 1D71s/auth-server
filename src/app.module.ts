@@ -14,7 +14,11 @@ import { UserAdminModule } from '@src/admin/user.admin/user.admin.module';
 import { MailModule } from './mail/mail.module';
 import { VerificationModule } from './verification/verification.module';
 import { AttemptModule } from './attempt/attempt.module';
+import { UploadsModule } from './uploads/uploads.module';
 import * as process from "process";
+import { MulterModule } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+
 
 @Module({
     imports: [
@@ -22,7 +26,10 @@ import * as process from "process";
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
             autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-            context: ({ req, res }) => ({ req, res })
+            context: ({ req, res }) => ({ req, res }),
+        }),
+        MulterModule.register({
+            storage: memoryStorage(),
         }),
         AuthModule,
         ConfigModule.forRoot({ isGlobal: true }),
@@ -34,6 +41,7 @@ import * as process from "process";
         MailModule,
         VerificationModule,
         AttemptModule,
+        UploadsModule,
     ],
     controllers: [],
     providers: [

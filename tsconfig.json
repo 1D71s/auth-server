@@ -30,6 +30,7 @@
       "@src/*": [
         "src/*"
       ]
-    }
+    },
+    "types": ["graphql-upload"]
   }
 }
