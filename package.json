@@ -53,6 +53,7 @@
     "graphql-playground-middleware-express": "^1.7.23",
     "graphql-upload": "^14.0.0",
     "handlebars": "^4.7.8",
+    "mime-types": "^2.1.35",
     "nodemailer": "^6.9.7",
     "passport": "^0.5.1",
     "passport-google-oauth20": "^2.0.0",
