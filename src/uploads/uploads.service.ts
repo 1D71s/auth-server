@@ -1,11 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { S3Client, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from 'express-fileupload';
 import * as mimeTypes from 'mime-types';
 import { Response } from 'express';
 import axios from 'axios';
 import { ImageEntity } from './entity/Image-entity';
 import { Message } from '../common/global-endity/message-endity'
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UploadsService {
@@ -35,8 +36,7 @@ export class UploadsService {
     }
 
     private async s3_upload(file: Buffer, bucket: string, mimetype: string, directory: string): Promise<ImageEntity> {
-        const timestamp = Date.now();
-        const keyFile = `image_${timestamp}.jpg`;
+        const keyFile = `image_${uuidv4()}.${mimetype.split('/')[1] || 'jpg'}`;
 
         const params = {
             Bucket: bucket,

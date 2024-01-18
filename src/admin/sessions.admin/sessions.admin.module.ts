@@ -6,12 +6,13 @@ import { SessionsModule } from "@src/sessions/sessions.module";
 import { PrismaService } from "@src/common/prisma/prisma";
 import { UserService } from "@src/user/user.service";
 import { SessionsService } from "@src/sessions/sessions.service";
+import { UploadsService } from '@src/uploads/uploads.service';
 
 @Module({
-    providers: [SessionsAdminResolver, SessionsAdminService, PrismaService, UserService, SessionsService],
+    providers: [SessionsAdminResolver, SessionsAdminService, PrismaService, UserService, SessionsService, UploadsService],
     imports: [
         RolesModule,
-        SessionsModule
+        SessionsModule,
     ]
 })
 export class SessionsAdminModule {}

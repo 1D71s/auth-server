@@ -18,6 +18,8 @@ import { BanService } from "@src/admin/ban/ban.service";
 import { RolesModule } from "@src/admin/roles/roles.module";
 import { AttemptModule } from "@src/attempt/attempt.module";
 import { MailModule } from "@src/mail/mail.module";
+import { UploadsModule } from '@src/uploads/uploads.module';
+import { UploadsService } from '@src/uploads/uploads.service';
 
 @Module({
     providers: [
@@ -29,7 +31,8 @@ import { MailModule } from "@src/mail/mail.module";
         GoogleGuard,
         JwtStrategy,
         RolesGuard,
-        BanService
+        BanService,
+        UploadsService
     ],
     controllers: [AuthController],
     imports: [
@@ -40,6 +43,7 @@ import { MailModule } from "@src/mail/mail.module";
         BanModule,
         AttemptModule,
         MailModule,
+        UploadsModule,
         ConfigModule.forRoot(),
         JwtModule.register({
             secret: process.env.JWT_SECRET,
