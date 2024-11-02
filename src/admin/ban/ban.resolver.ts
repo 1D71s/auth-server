@@ -5,7 +5,7 @@ import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { BadRequestException } from "@nestjs/common";
 import { Roles } from "@app/common/decorators/getData/roles-decorator";
-import { BanEntity } from "@src/admin/ban/endity/ban-endity";
+import { BanEntity } from "@src/admin/ban/endity/ban-entity";
 import { IdDto } from "@src/common/global-dto/id-dto";
 import { UserService } from "@src/user/user.service";
 

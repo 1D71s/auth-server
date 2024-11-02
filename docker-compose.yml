@@ -9,7 +9,6 @@ services:
       - .env
     volumes:
       - .:/app
-      - /app/node_modules
     ports:
       - "5001:5001"
       - "9229:9229"

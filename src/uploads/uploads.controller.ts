@@ -3,9 +3,7 @@ import { UploadsService } from './uploads.service';
 import { Response } from 'express';
   
 @Controller()
-
 export class UploadController {
-
     constructor(private readonly uploadService: UploadsService) { }
     
     @Get('upload/:folder/:image')

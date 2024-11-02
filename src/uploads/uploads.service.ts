@@ -5,7 +5,7 @@ import * as mimeTypes from 'mime-types';
 import { Response } from 'express';
 import axios from 'axios';
 import { ImageEntity } from './entity/Image-entity';
-import { Message } from '../common/global-endity/message-endity'
+import { Message } from '../common/global-endity/message-entity';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

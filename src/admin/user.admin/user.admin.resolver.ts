@@ -1,6 +1,6 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { UserAdminService } from './user.admin.service';
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 import { UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";
 import { User } from "@app/common/decorators/getData/getuser-decorator";

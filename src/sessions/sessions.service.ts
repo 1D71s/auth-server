@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "@src/common/prisma/prisma";
 import { Token } from "@prisma/client";
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 
 @Injectable()
 export class SessionsService {

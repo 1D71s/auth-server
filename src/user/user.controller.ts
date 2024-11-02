@@ -1,13 +1,12 @@
-import { Body, Controller, Delete, Param, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Delete, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { User } from '@app/common/decorators/getData/getuser-decorator';
 import { JwtAuthGuard } from '@src/auth/guards/jwt-auth-guard';
 import { JwtPayloadUser } from '@src/auth/iterfaces';
-  
+
 @Controller()
 export class UserController {
-    
     constructor(private readonly userService: UserService) {}
 
     @Post('upload/avatar')

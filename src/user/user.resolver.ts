@@ -7,8 +7,8 @@ import { EditUserDto } from "@src/user/dto/edit-user-dto";
 import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
-import { BanEntity } from "@src/admin/ban/endity/ban-endity";
-import { Message } from "@src/common/global-endity/message-endity";
+import { BanEntity } from "@src/admin/ban/endity/ban-entity";
+import { Message } from "@src/common/global-endity/message-entity";
 import { ChangePasswordDto } from "@src/user/dto/change-password-dto";
 import { CheckVerificationGuard } from "@src/auth/guards/verification-guard";
 

@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { SessionsService } from './sessions.service';
 import { BadRequestException, UseGuards } from "@nestjs/common";
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 import { RefreshTokenDto } from "@src/sessions/dto/refreshtoken-dto";
 import { TokenEntity } from "@src/sessions/entity/token-entity";
 import { JwtAuthGuard } from "@src/auth/guards/jwt-auth-guard";

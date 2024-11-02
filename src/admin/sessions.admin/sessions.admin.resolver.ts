@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { SessionsAdminService } from './sessions.admin.service';
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 import { RefreshTokenDto } from "@src/sessions/dto/refreshtoken-dto";
 import { User } from "@app/common/decorators/getData/getuser-decorator";
 import { JwtPayloadUser } from "@src/auth/iterfaces";

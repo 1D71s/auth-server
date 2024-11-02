@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { RegisterDto } from './dto/register-dto';
 import { UserService } from 'src/user/user.service';
-import { UserId } from './endity/userId-endity';
+import { UserId } from './endity/userId-entity';
 import { LoginDto } from "./dto/login-dto";
 import { compareSync } from 'bcrypt';
 import { AttemptType, Provider, Token, User } from "@prisma/client";
@@ -16,13 +16,13 @@ import { PrismaService } from "@src/common/prisma/prisma";
 import { add } from 'date-fns';
 import { v4 } from 'uuid';
 import { GoogleUser, Tokens } from "./iterfaces";
-import { AccessToken } from "./endity/token-endity";
+import { AccessToken } from "./endity/token-entity";
 import { Response } from "express";
 import { AttemptService } from "@src/attempt/attempt.service";
 import { randomBytes } from 'crypto';
 import { UserEmail } from "@src/auth/dto/user-email";
 import { MailService } from "@src/mail/mail.service";
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 import { ResetPasswordDto } from "@src/auth/dto/reset-password-dto";
 
 @Injectable()

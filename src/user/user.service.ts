@@ -7,11 +7,11 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from 'src/common/prisma/prisma';
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
-import { UserId } from 'src/auth/endity/userId-endity';
+import { UserId } from '@src/auth/endity/userId-entity';
 import { Bans, User } from "@prisma/client";
 import { EditUserDto } from "@src/user/dto/edit-user-dto";
 import { FullUser } from "@src/user/interfaces";
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 import { ChangePasswordDto } from "@src/user/dto/change-password-dto";
 import { UploadsService } from "@src/uploads/uploads.service";
 import { Upload } from 'express-fileupload';
@@ -19,11 +19,10 @@ import { Upload } from 'express-fileupload';
 
 @Injectable()
 export class UserService {
-
     constructor(
         private readonly prisma: PrismaService,
         private readonly uploadService: UploadsService
-    ) { }
+    ) {}
     
     async createUser(dto: Partial<User>): Promise<UserId> {
 
@@ -144,7 +143,7 @@ export class UserService {
         const uploadToStorage = await this.uploadService.uploadImage(file, "avatar");
 
         if (!uploadToStorage.image) {
-            throw new Error("Failed to upload avatar image.");
+            throw new BadRequestException("Failed to upload avatar image.");
         }
 
         await this.prisma.user.update({

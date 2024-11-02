@@ -3,7 +3,7 @@ import { ChangePasswordAdminDto } from "@src/admin/user.admin/dto/change-passwor
 import { UserService } from "@src/user/user.service";
 import { RolesService } from "@src/admin/roles/roles.service";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 
 @Injectable()
 export class UserAdminService {

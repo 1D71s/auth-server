@@ -5,7 +5,7 @@ import { UserService } from "@src/user/user.service";
 import { RolesService } from "@src/admin/roles/roles.service";
 import { JwtPayloadUser } from "@src/auth/iterfaces";
 import { SessionsService } from "@src/sessions/sessions.service";
-import { Message } from "@src/common/global-endity/message-endity";
+import { Message } from "@src/common/global-endity/message-entity";
 import { TokenUserIdDto } from "@src/admin/sessions.admin/dto/token-userId-dto";
 
 @Injectable()
